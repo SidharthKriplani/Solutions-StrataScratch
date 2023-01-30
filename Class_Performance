@@ -1,0 +1,23 @@
+PYTHON
+scores = list(box_scores.assignment1+box_scores.assignment2+box_scores.assignment3)
+sorted(scores)[-1] - sorted(scores)[0]
+
+
+
+POSTGRE SQL
+WITH c1 AS
+(
+SELECT assignment1+assignment2+assignment3 AS total
+FROM box_scores
+ORDER BY total ASC
+)
+
+SELECT MAX(total) - MIN(total)
+FROM c1
+
+
+
+R
+total = box_scores["assignment1"]+box_scores["assignment2"]+box_scores["assignment3"]
+total = c(total[order(total$assignment1, decreasing  = FALSE), ])
+max(total) - min(total)
