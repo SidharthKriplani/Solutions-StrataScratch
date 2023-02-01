@@ -1,0 +1,22 @@
+POSTGRE SQL:
+WITH c1 AS 
+(
+SELECT *, RANK() OVER(PARTITION BY CONCAT(first_name, ' ', last_name) ORDER BY salary DESC) AS rankk
+FROM ms_employee_salary
+)
+
+SELECT id, first_name, last_name, department_id, salary
+FROM c1 
+WHERE rankk = 1
+ORDER BY id 
+
+
+PYTHON:
+ms_employee_salary['current_salary_rank'] = ms_employee_salary.groupby('first_name')['salary'].rank(ascending = 0)
+final = ms_employee_salary[ms_employee_salary['current_salary_rank'] == 1]
+final = final.sort_values(by = ['id'], ascending = True)[['id',	'first_name', 'last_name', 'department_id', 'salary']]
+final
+(not yielding the correct solution)
+
+
+R:
