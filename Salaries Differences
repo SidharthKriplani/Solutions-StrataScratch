@@ -1,0 +1,26 @@
+PYTHON:
+db_employee.head()
+db_dept.head()
+db_total = pd.merge(db_employee, db_dept, how = 'inner', left_on = 'department_id', right_on = 'id')
+salary_difference = max(db_total[db_total['department'] == 'marketing']['salary']) - max(db_total[db_total['department'] == 'engineering']['salary'])
+salary_difference
+
+
+POSTGRE SQL:
+WITH c1 AS
+(
+SELECT dbe.id, dbe.first_name, dbe.last_name, dbe.salary, dbd.department
+FROM db_employee dbe
+JOIN db_dept dbd
+ON dbe.department_id = dbd.id
+)
+
+SELECT MAX(salary) - (SELECT MAX(salary) FROM c1 WHERE department = 'engineering')
+FROM c1
+WHERE department = 'marketing'
+
+
+R:
+db_total = merge(x = db_employee, y = db_dept, by.x = "department_id", by.y = 'id')
+salary_diff = max(db_total[db_total$department == 'marketing', ]['salary']) - max(db_total[db_total$department == 'engineering', ]['salary'])
+salary_diff
