@@ -25,3 +25,4 @@ db_total = merge(x = db_employee, y = db_dept, by.x = "department_id", by.y = 'i
 salary_diff = max(db_total[db_total$department == 'marketing', ]['salary']) - max(db_total[db_total$department == 'engineering', ]['salary'])
 salary_diff
  
+ 
