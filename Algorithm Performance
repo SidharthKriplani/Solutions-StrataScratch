@@ -21,3 +21,24 @@ FROM c1
 SELECT DISTINCT search_id, search_results_rating AS max_rating
 FROM c2 
 WHERE max_rating = 1
+
+
+PYTHON
+
+fb_search_events['search_results_rating'] = 0
+def ranker(click, pos):
+    if click == 0:
+        return 1
+    elif click ==1 and pos > 3:
+        return 2
+    elif click == 1 and pos < 4:
+        return 3
+    else: 
+        pass
+
+fb_search_events['search_results_rating'] = pd.Series()
+
+for i in range(0, len(fb_search_events)):
+    fb_search_events['search_results_rating'][i] = ranker(fb_search_events['clicked'][i], fb_search_events['search_results_position'][i])
+
+fb_search_events[['search_id', 'search_results_rating']].groupby(['search_id'], as_index = False).max()
