@@ -1,4 +1,4 @@
-PYTHON:
+POSTGRE SQL:
 
 WITH c1 AS 
 (
