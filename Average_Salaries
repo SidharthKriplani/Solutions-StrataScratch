@@ -16,8 +16,10 @@ ORDER BY e.department
 PYTHON:
 df = employee.groupby(['department'], as_index = False)['salary'].mean()
 # without using as_index = False I was not getting department names, just pandas series to give me the avg salary values
+
 df = df.rename(columns = {'department': 'department', 'salary': 'avg_salary'})
 # above will give a syntax error if I use [] instead of {}
+
 pd.merge(df, employee, on = 'department')[['department', 'first_name', 'salary', 'avg_salary']]
 # remember, when using names of multiple columns, use double [] instead of single []
 
