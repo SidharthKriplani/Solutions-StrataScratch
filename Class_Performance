@@ -21,3 +21,4 @@ R
 total = box_scores["assignment1"]+box_scores["assignment2"]+box_scores["assignment3"]
 total = c(total[order(total$assignment1, decreasing  = FALSE), ])
 max(total) - min(total)
+ 
