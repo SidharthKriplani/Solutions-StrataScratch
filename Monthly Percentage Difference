@@ -1,0 +1,23 @@
+WITH c1 AS
+(
+SELECT EXTRACT(MONTH FROM created_at) AS year_month, 
+SUM(value) AS monthly_revenue
+FROM sf_transactions
+GROUP BY 1
+), 
+
+c2 AS
+(
+SELECT 
+CASE
+WHEN LENGTH(year_month::VARCHAR) = 1 THEN CONCAT('2019-0', year_month)
+WHEN LENGTH(year_month::VARCHAR) = 2 THEN CONCAT('2019-', year_month)
+END AS year_month, monthly_revenue
+FROM c1
+ORDER BY 1
+)
+
+SELECT 
+year_month, 
+ROUND(100*(monthly_revenue-LAG(monthly_revenue) OVER(PARTITION BY 1 ORDER BY 1))/LAG(monthly_revenue) OVER(PARTITION BY 1 ORDER BY 1), 2)
+FROM c2
