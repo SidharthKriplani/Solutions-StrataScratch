@@ -1,0 +1,23 @@
+PYTHON:
+
+WITH c1 AS 
+(
+SELECT *, 
+CASE 
+WHEN clicked = 0 THEN 1
+WHEN clicked = 1 AND search_results_position > 3 THEN 2
+WHEN clicked = 1 AND search_results_position < 4 THEN 3
+END AS search_results_rating 
+FROM fb_search_events
+), 
+
+c2 AS
+(
+select search_id, search_results_rating, 
+DENSE_RANK() OVER(PARTITION BY search_id ORDER BY search_results_rating DESC) AS max_rating
+FROM c1
+)
+
+SELECT DISTINCT search_id, search_results_rating AS max_rating
+FROM c2 
+WHERE max_rating = 1
