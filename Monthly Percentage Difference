@@ -31,7 +31,7 @@ PYTHON:
 sf_transactions = sf_transactions[['created_at', 'value']]
 sf_transactions['created_at'] = sf_transactions['created_at'].apply(lambda x: str(x)[:7])
 df = sf_transactions.groupby(['created_at'], as_index = False)['value'].sum()
-df['prev_month'] = df.value.shift(1)
+df['prev_month'] = df.value.shift(1) 
 df['monthly_percentage_difference'] = pd.Series(round(100*(df['value'] - df['prev_month'])/df['prev_month'], 2))
 df = df[['created_at', 'monthly_percentage_difference']]
 
