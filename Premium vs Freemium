@@ -1,0 +1,37 @@
+POSTGRE SQL:
+
+WITH c1 AS
+(
+SELECT mdf.date, mdf.downloads, t1.user_id, t1.acc_id, t1.paying_customer
+FROM ms_download_facts mdf 
+JOIN (
+SELECT mud.user_id, mud.acc_id, mad.paying_customer
+FROM ms_user_dimension mud 
+JOIN ms_acc_dimension mad
+ON mud.acc_id = mad.acc_id
+) t1
+ON mdf.user_id = t1.user_id 
+), 
+
+c2 AS
+(
+SELECT date, paying_customer, sum(downloads) as total_downloads
+FROM c1
+GROUP BY date, paying_customer
+ORDER BY date
+)
+
+SELECT
+t2.date, 
+t2.total_downloads AS non_paying_cusutomer, 
+t3.total_downloads AS paying_customer 
+FROM
+(SELECT date, total_downloads FROM c2 WHERE paying_customer = 'no') t2
+JOIN
+(SELECT date, total_downloads FROM c2 WHERE paying_customer = 'yes') t3
+ON t2.date = t3.date
+WHERE t2.total_downloads > t3.total_downloads
+ORDER BY t2.date
+
+
+PYTHON:
