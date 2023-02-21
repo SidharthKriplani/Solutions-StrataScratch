@@ -7,7 +7,7 @@ PERCENT_RANK() OVER(PARTITION BY state ORDER BY fraud_score) AS perc_rank
 FROM fraud_score
 )
 
-SELECRT policy_num, state, claim_cost, fraud_score
+SELECT policy_num, state, claim_cost, fraud_score
 FROM c1
 WHERE perc_rank >=0.95
 
