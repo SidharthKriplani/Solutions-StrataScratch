@@ -1,0 +1,12 @@
+POSTGRE SQL:
+
+WITH c1 AS
+(
+SELECT weather, hour, COUNT(*) AS cnt
+FROM lyft_rides
+GROUP BY weather, hour
+)
+
+SELECT weather, hour, ROUND(1.0*cnt/(SELECT COUNT(*) FROM lyft_rides), 3)
+FROM c1
+ORDER BY weather, hour
