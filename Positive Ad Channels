@@ -1,3 +1,5 @@
+POSTGRE SQL:
+
 WITH c1 AS
 (
 SELECT year, advertising_channel, SUM(money_spent)
@@ -10,3 +12,6 @@ LIMIT 1
 
 SELECT advertising_channel
 FROM c1
+
+
+PYTHON:
