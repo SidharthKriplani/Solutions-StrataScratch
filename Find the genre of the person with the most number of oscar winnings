@@ -1,0 +1,30 @@
+POSTGRE SQL:
+
+WITH c1 AS
+(
+SELECT ni.name, om.winner, ni.top_genre
+FROM oscar_nominees om
+JOIN nominee_information ni
+ON om.nominee = ni.name
+WHERE om.winner = TRUE
+), 
+
+c2 AS 
+(
+SELECT name, COUNT(*)
+FROM c1 
+GROUP BY 1
+ORDER BY 2 DESC, 1 ASC
+LIMIT 1
+)
+
+SELECT DISTINCT top_genre
+FROM c1
+WHERE name = (SELECT name FROM c2)
+
+
+PYTHON:
+
+
+R:
+
