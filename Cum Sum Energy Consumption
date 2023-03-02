@@ -1,0 +1,83 @@
+POSTGRE SQL:
+
+WITH all_dates AS
+(
+SELECT *
+FROM
+(
+SELECT date
+FROM fb_eu_energy
+UNION 
+SELECT date
+FROM fb_na_energy
+UNION
+SELECT date
+FROM fb_asia_energy
+) a
+ORDER BY 1 ASC
+), 
+
+eu_data AS
+(
+SELECT all_dates.date, COALESCE(fb_eu_energy.consumption, 0) AS eu_consumption
+FROM all_dates
+LEFT JOIN fb_eu_energy
+ON all_dates.date = fb_eu_energy.date
+), 
+
+na_data AS 
+(
+SELECT all_dates.date, COALESCE(fb_na_energy.consumption, 0) AS na_consumption
+FROM all_dates
+LEFT JOIN fb_na_energy
+ON all_dates.date = fb_na_energy.date
+), 
+
+asia_data AS
+(
+SELECT all_dates.date, COALESCE(fb_asia_energy.consumption, 0) AS asia_consumption
+FROM all_dates
+LEFT JOIN fb_asia_energy
+ON all_dates.date = fb_asia_energy.date
+), 
+
+final_table AS
+(
+SELECT b.date, b.asia_consumption+b.na_consumption+eu_data.eu_consumption AS consumption
+FROM 
+(SELECT 
+ad.date, 
+ad.asia_consumption, 
+nad.na_consumption
+FROM asia_data ad
+JOIN na_data nad
+ON ad.date = nad.date) b
+JOIN eu_data on 
+b.date = eu_data.date
+), 
+
+total as 
+(
+SELECT SUM(consumption) AS total_consumption
+FROM final_table
+), 
+
+cumulative_table AS
+(
+SELECT date, SUM(consumption) OVER(ORDER BY date ASC) AS cumulative_energy
+FROM final_table
+)
+
+SELECT 
+date, 
+cumulative_energy, 
+ROUND(100.0*cumulative_energy/(SELECT total_consumption FROM total), 0)
+FROM cumulative_table
+
+
+PYTHON:
+
+
+R:
+
+
