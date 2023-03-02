@@ -1,0 +1,26 @@
+POSTGRE SQL:
+
+WITH all_data AS 
+(
+SELECT user_id, friend_id
+FROM google_friends_network
+UNION
+SELECT friend_id, user_id
+FROM google_friends_network
+), 
+
+c1 AS
+(
+SELECT COUNT(*) AS cnt
+FROM all_data
+GROUP BY user_id
+)
+
+SELECT AVG(cnt) AS avg_fr
+FROM c1
+
+
+PYTHON:
+
+
+R:
