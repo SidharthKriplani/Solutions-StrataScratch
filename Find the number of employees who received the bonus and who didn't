@@ -1,0 +1,22 @@
+POTSGRE SQL:
+
+WITH c1 AS 
+(
+SELECT e.id, SUM(e.target + COALESCE(b.bonus_amount, 0)) AS bonus
+FROM employee e
+LEFT JOIN bonus b 
+ON e.id = b.worker_ref_id
+GROUP BY 1
+)
+
+SELECT
+CASE WHEN bonus > 0 THEN 0 ELSE 1 END AS has_bonus, 
+COUNT(*) AS n_employees
+FROM c1
+GROUP BY 1
+
+
+PYTHON:
+
+
+R:
