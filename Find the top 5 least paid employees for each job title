@@ -1,0 +1,18 @@
+POSTGRE SQL:
+
+WITH c1 AS
+(
+SELECT employeename, jobtitle, totalpaybenefits, 
+DENSE_RANK() OVER(PARTITION BY jobtitle ORDER BY totalpaybenefits ASC) AS rankk
+FROM sf_public_salaries
+)
+
+SELECT employeename, jobtitle, totalpaybenefits
+FROM c1
+WHERE rankk IN (1, 2, 3, 4, 5)
+
+
+PYTHON:
+
+
+R:
