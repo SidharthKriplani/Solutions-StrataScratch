@@ -1,0 +1,22 @@
+POSTGRE SQL:
+WITH c1 AS
+(
+SELECT 
+EXTRACT(MONTH FROM invoicedate) AS month, 
+description, 
+SUM(quantity*unitprice) AS total_paid, 
+DENSE_RANK() OVER(PARTITION BY EXTRACT(MONTH FROM invoicedate) ORDER BY SUM(quantity*unitprice) DESC) AS rankk
+
+FROM online_retail
+GROUP BY 1, 2
+)
+
+SELECT month, description, total_paid
+FROM c1
+WHERE rankk = 1
+
+
+PYTHON:
+
+
+R:
