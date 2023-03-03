@@ -1,0 +1,25 @@
+POSTGRE SQL:
+
+WITH c1 AS
+(
+SELECT qb, REPLACE(lg, 't', '') AS lg
+FROM qbstats_2015_2016 
+), 
+
+c2 AS
+(
+SELECT qb, lg, DENSE_RANK() OVER(PARTITION BY qb ORDER BY lg desc) AS rankk
+FROM c1
+)
+
+SELECT qb, lg as lg_num
+FROM c2
+ORDER BY lg DESC
+LIMIT 1
+
+
+PYTHON:
+
+
+R:
+
