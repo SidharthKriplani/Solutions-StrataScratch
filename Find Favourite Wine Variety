@@ -1,0 +1,27 @@
+POSTGRE SQL:
+
+WITH c1 AS
+(
+SELECT taster_name, variety, COUNT(*) AS cnt
+FROM winemag_p2
+WHERE taster_name IS NOT null
+GROUP BY 1, 2
+ORDER BY 1 ASC, 3 DESC
+), 
+
+c2 AS 
+(
+SELECT taster_name, variety, DENSE_RANK() OVER(PARTITION BY taster_name ORDER BY cnt DESC) AS rankk
+FROM c1
+)
+
+SELECT taster_name, variety
+FROM c2
+WHERE rankk = 1
+
+
+PYTHON:
+
+
+R:
+
