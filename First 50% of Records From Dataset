@@ -1,0 +1,21 @@
+POSTGRE SQL:
+
+WITH c1 AS
+(
+SELECT *, ROW_NUMBER() OVER(ORDER BY worker_id) AS row_num
+FROM worker
+), 
+
+max_row_num AS
+(SELECT MAX(row_num) AS max_row_num
+FROM c1)
+
+SELECT worker_id, first_name, last_name, salary, joining_date, department
+FROM c1
+WHERE row_num <= (SELECT max_row_num FROM max_row_num)/2
+
+
+PYTHON:
+
+
+R:
