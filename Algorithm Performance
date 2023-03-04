@@ -33,7 +33,7 @@ def ranker(click, pos):
         return 2
     elif click == 1 and pos < 4:
         return 3
-    else: 
+    else:  
         pass
 
 fb_search_events['search_results_rating'] = pd.Series()
