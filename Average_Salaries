@@ -13,7 +13,7 @@ ON c1.department = e.department
 ORDER BY e.department
 
 
-PYTHON:
+PYTHON: 
 df = employee.groupby(['department'], as_index = False)['salary'].mean()
 # without using as_index = False I was not getting department names, just pandas series to give me the avg salary values
 
