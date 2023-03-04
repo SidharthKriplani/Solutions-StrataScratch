@@ -17,6 +17,16 @@ WHERE rankk = 1
 
 
 PYTHON:
+df = pd.DataFrame()
+df['month'] = pd.Series(online_retail['invoicedate'].dt.month)
+df['description'] = online_retail['description']
+df['total_paid'] = online_retail['quantity']*online_retail['unitprice']
+
+df = df.groupby(['month', 'description'], as_index = False)['total_paid'].sum()
+
+df['ranks'] = df.groupby('month', as_index = False)['total_paid'].rank(method='dense', ascending=False).astype(int)
+
+df = df[df['ranks']==1][['month', 'description', 'total_paid']]
 
 
 R:
