@@ -13,7 +13,7 @@ GROUP BY 1, 2
 
 SELECT month, description, total_paid
 FROM c1
-WHERE rankk = 1
+WHERE rankk = 1 
 
 
 PYTHON:
