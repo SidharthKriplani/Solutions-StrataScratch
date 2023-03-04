@@ -8,7 +8,7 @@ JOIN nominee_information ni
 ON om.nominee = ni.name
 WHERE om.winner = TRUE
 ), 
-
+ 
 c2 AS 
 (
 SELECT name, COUNT(*)
