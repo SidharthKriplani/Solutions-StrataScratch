@@ -1,0 +1,26 @@
+POSTGRE SQL:
+
+WITH c1 AS
+(
+SELECT fu.name, COUNT(*) AS comment_cnt
+FROM fb_users fu
+JOIN fb_comments fc
+ON fu.id = fc.user_id
+WHERE EXTRACT(YEAR FROM fu.joined_at) IN (2018, 2019, 2020)
+AND EXTRACT(YEAR FROM fc.created_at) IN (2020)
+AND EXTRACT(MONTH FROM fc.created_at) IN (1)
+AND joined_at < created_at
+GROUP BY 1
+)
+
+SELECT comment_cnt, COUNT(*) AS users_cnt
+FROM c1
+GROUP BY 1
+ORDER BY 1
+
+
+PYTHON:
+
+
+R:
+
