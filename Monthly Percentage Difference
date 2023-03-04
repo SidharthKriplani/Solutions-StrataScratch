@@ -25,7 +25,6 @@ ROUND(100*(monthly_revenue-LAG(monthly_revenue) OVER(PARTITION BY 1 ORDER BY 1))
 FROM c2
 
 
-
 PYTHON:
 
 sf_transactions = sf_transactions[['created_at', 'value']]
