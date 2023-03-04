@@ -1,0 +1,30 @@
+POSTGRE SQL:
+
+WITH total_users AS
+(
+SELECT user1 AS users, COUNT(*) AS cnt
+FROM facebook_friends
+GROUP BY 1
+UNION
+SELECT user2 AS users, COUNT(*) AS cnt
+FROM facebook_friends
+GROUP BY 1
+), 
+
+total_friends AS
+(
+SELECT users, SUM(cnt) AS total_friends
+FROM total_users
+GROUP BY users
+)
+
+SELECT users, (100.0*total_friends/9) AS popularity_percent
+FROM total_friends
+ORDER BY 1 ASC
+
+
+PYTHON:
+
+
+R:
+
