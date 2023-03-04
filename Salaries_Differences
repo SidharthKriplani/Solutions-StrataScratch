@@ -1,11 +1,3 @@
-PYTHON:
-db_employee.head()
-db_dept.head()
-db_total = pd.merge(db_employee, db_dept, how = 'inner', left_on = 'department_id', right_on = 'id')
-salary_difference = max(db_total[db_total['department'] == 'marketing']['salary']) - max(db_total[db_total['department'] == 'engineering']['salary'])
-salary_difference
-
-
 POSTGRE SQL:
 WITH c1 AS
 (
@@ -18,6 +10,14 @@ ON dbe.department_id = dbd.id
 SELECT MAX(salary) - (SELECT MAX(salary) FROM c1 WHERE department = 'engineering')
 FROM c1
 WHERE department = 'marketing'
+
+
+PYTHON:
+db_employee.head()
+db_dept.head()
+db_total = pd.merge(db_employee, db_dept, how = 'inner', left_on = 'department_id', right_on = 'id')
+salary_difference = max(db_total[db_total['department'] == 'marketing']['salary']) - max(db_total[db_total['department'] == 'engineering']['salary'])
+salary_difference
 
 
 R:
