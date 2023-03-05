@@ -17,6 +17,9 @@ LIMIT 5)
 
 
 PYTHON:
+yelp_business = yelp_business[yelp_business['stars'] == 5].groupby('state', as_index = False).size().rename(columns = {'size': 'cnt'})
+yelp_business = yelp_business.sort_values(['cnt', 'state'], ascending = [False, True])
+yelp_business[yelp_business['cnt'].isin(yelp_business.iloc[0:5]['cnt'])]
 
 
 R:
