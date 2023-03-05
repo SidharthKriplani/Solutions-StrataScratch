@@ -13,6 +13,10 @@ ORDER BY weather, hour
 
 
 PYTHON:
+leng = len(lyft_rides)
+lyft_rides = lyft_rides.groupby(['weather', 'hour'], as_index = False).size().rename(columns = {'size': 'cnt'})
+lyft_rides['probability'] = lyft_rides['cnt']/leng
+lyft_rides[['weather', 'hour', 'probability']]
 
 
 R:
