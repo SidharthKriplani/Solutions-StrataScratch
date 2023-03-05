@@ -16,6 +16,7 @@ WHERE row_num <= (SELECT max_row_num FROM max_row_num)/2
 
 
 PYTHON:
+worker.iloc[0:int(len(worker)/2)]
 
 
 R:
