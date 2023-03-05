@@ -1,8 +1,8 @@
 POSTGRE SQL:
 
-WITH c1 AS
+with c1 as
 (
-SELECT department, salary, DENSE_RANK() OVER(PARTITON BY department ORDER BY salary DESC) AS rankk
+SELECT department, salary, DENSE_RANK() OVER(PARTITION BY department ORDER BY salary DESC) AS rankk
 FROM twitter_employee
 )
 
@@ -13,6 +13,11 @@ ORDER BY 1 ASC, 2 DESC
 
 
 PYTHON:
+twitter_employee['rank'] = twitter_employee.groupby('department', as_index = False)['salary'].rank(method = 'dense', ascending = False)
+twitter_employee = twitter_employee[['department', 'salary', 'rank']]
+twitter_employee = twitter_employee[(twitter_employee['rank'] == 1) | (twitter_employee['rank'] == 2) | (twitter_employee['rank'] == 3)]
+twitter_employee = twitter_employee.sort_values(['department', 'salary'], ascending = [True, False]).drop_duplicates()
+twitter_employee[['department', 'salary']]
 
 
 R: 
