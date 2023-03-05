@@ -25,6 +25,13 @@ ORDER BY 1 ASC
 
 PYTHON:
 
+df1 = facebook_friends.groupby('user1', as_index = False).size().rename(columns = {'size': 'cnt'}).rename(columns = {'user1': 'user'})
+df2 = facebook_friends.groupby('user2', as_index = False).size().rename(columns = {'size': 'cnt'}).rename(columns = {'user2': 'user'})
+df = pd.concat([df1, df2], axis = 0)
+df = df.groupby('user', as_index = False)['cnt'].sum().rename(columns = {'cnt':'total_friends'})
+df['popularity_percent'] = 100.*df['total_friends']/9
+df[['user', 'popularity_percent']]
+
 
 R:
  
