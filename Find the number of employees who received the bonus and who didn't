@@ -18,6 +18,13 @@ GROUP BY 1
 
 PYTHON:
 
+bonus = bonus.rename(columns = {'worker_ref_id': 'id'})
+df = pd.merge(employee, bonus, on = 'id', how = 'left').fillna(0)
+df['bonus'] = df['bonus_amount'] + df['target']
+df = df.groupby('id', as_index = False)['bonus'].sum()
+df['has_bonus'] = np.where(df['bonus'] > 0, 0, 1)
+df.groupby('has_bonus').size()
+
 
 R:
  
