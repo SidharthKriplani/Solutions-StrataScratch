@@ -13,6 +13,10 @@ WHERE rankk IN (1, 2, 3, 4, 5)
 
 
 PYTHON:
+sf_public_salaries = sf_public_salaries[['employeename', 'jobtitle', 'totalpaybenefits']]
+sf_public_salaries['rank'] = sf_public_salaries.groupby('jobtitle', as_index = False)['totalpaybenefits'].rank(method = 'dense', ascending = True).astype(int)
+sf_public_salaries = sf_public_salaries[sf_public_salaries['rank'].isin([1, 2, 3, 4, 5])]
+sf_public_salaries[['employeename', 'jobtitle', 'totalpaybenefits']]
 
 
 R:
