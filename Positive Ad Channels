@@ -16,5 +16,10 @@ FROM c1
 
 PYTHON:
 
+uber_advertising = uber_advertising[uber_advertising['customers_acquired']>1500]
+uber_advertising = uber_advertising[['year', 'advertising_channel', 'money_spent']].groupby(['year', 'advertising_channel'], as_index = False)['money_spent'].sum()
+uber_advertising = uber_advertising.sort_values(['year', 'money_spent'], ascending = [True, True])
+uber_advertising['advertising_channel']
+
 
 R:
