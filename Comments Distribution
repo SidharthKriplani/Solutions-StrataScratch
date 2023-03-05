@@ -20,6 +20,23 @@ ORDER BY 1
 
 
 PYTHON:
+fb_comments = fb_comments.rename(columns = {'user_id': 'id'})
+fb = fb_users.merge(fb_comments, on = 'id', how = 'outer')
+
+fb = fb[['name', 'created_at', 'joined_at']]
+fb['joined_at_year'] = fb['joined_at'].dt.year
+fb['created_at_year'] = fb['created_at'].dt.year
+fb['created_at_month'] = fb['created_at'].dt.month
+
+fb = fb[
+        (fb['joined_at'].dt.year >= 2018) & (fb['joined_at'].dt.year <= 2020) &
+        (fb['created_at'].dt.year == 2020) &
+        (fb['created_at'].dt.month == 1) & 
+        (fb['joined_at'] < fb['created_at'])
+        ]
+
+fb = fb.groupby(['name'], as_index = False).size().rename(columns = {'size': 'freq'})
+fb.groupby(['freq'], as_index = False).size().rename(columns = {'freq':'comment_cnt', 'size':'user_cnt'})
 
 
 R:
