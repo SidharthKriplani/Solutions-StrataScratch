@@ -1,0 +1,20 @@
+POSTGRE SQL:
+
+WITH c1 AS
+(
+SELECT host_id, SUM(n_beds) AS number_of_beds
+FROM airbnb_apartments
+GROUP BY 1
+)
+
+SELECT host_id, number_of_beds, DENSE_RANK() OVER(ORDER BY number_of_beds DESC) AS rank
+FROM c1
+
+
+PYTHON:
+airbnb_apartments = airbnb_apartments.groupby('host_id', as_index = False).sum()[['host_id', 'n_beds']]
+airbnb_apartments['rank'] = airbnb_apartments['n_beds'].rank(method = 'dense', ascending = False)
+airbnb_apartments.sort_values('rank', ascending = True)
+
+
+R:
