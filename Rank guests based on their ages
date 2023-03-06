@@ -1,0 +1,14 @@
+POSTGRE SQL:
+SELECT guest_id, RANK() OVER(ORDER BY age desc)
+FROM airbnb_guests
+
+
+PYTHON:
+airbnb_guests['rank'] = airbnb_guests['age'].rank(ascending = False)
+airbnb_guests['rank'] = [int(i) for i in airbnb_guests['rank']]
+airbnb_guests[['guest_id',  'rank']].sort_values(by = ['rank'], ascending = True)
+-- using the method parameter in rank() was causing issues. https://bit.ly/3YkaE5W
+
+
+R:
+
