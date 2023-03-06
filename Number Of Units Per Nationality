@@ -1,0 +1,18 @@
+POSTGRE SQL:
+
+SELECT ah.nationality, COUNT(DISTINCT au.unit_id)
+FROM airbnb_hosts ah
+JOIN airbnb_units au
+ON ah.host_id = au.host_id
+WHERE ah.age < 30 AND au.unit_type = 'Apartment'
+GROUP BY 1
+
+
+PYTHON:
+df = pd.merge(airbnb_hosts, airbnb_units, on = 'host_id', how = 'inner')
+df = df[(df['age']<30) & (df['unit_type']=='Apartment')]
+df.groupby('nationality', as_index = False)['unit_id'].nunique()
+-- nunique() is pandas equivalent of COUNT(DISTINCT) in SQL. ['unit_id'].nunique() == COUNT(DISTINCT au.unit_id)
+
+
+R:
