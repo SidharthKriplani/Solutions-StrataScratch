@@ -14,5 +14,9 @@ WHERE perc_rank >=0.95
 
 PYTHON:
  
+fraud_score['perc_rank'] = fraud_score.groupby('state').rank(pct = True, ascending = True)['fraud_score']
+fraud_score = fraud_score[['policy_num', 'state', 'claim_cost', 'fraud_score', 'perc_rank']]
+fraud_score[fraud_score['perc_rank']>0.95][['policy_num', 'state', 'claim_cost', 'fraud_score']]
+
 
 R:
