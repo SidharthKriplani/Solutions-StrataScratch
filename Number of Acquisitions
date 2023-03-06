@@ -1,0 +1,13 @@
+POSTGRE SQL:
+
+SELECT acquired_quarter, COUNT(*) AS cnt  
+FROM crunchbase_acquisitions
+GROUP BY 1
+ORDER BY 1, 2 DESC
+
+
+PYTHON:
+
+
+R:
+ 
