@@ -1,0 +1,19 @@
+POSTGRE SQL:
+
+SELECT client_id 
+FROM
+(
+SELECT client_id, SUM(CASE WHEN event_type IN ('video call received', 'video call sent', 'voice call received', 'voice call sent') THEN 1 ELSE 0 END) AS clear
+FROM fact_events
+GROUP BY 1
+ORDER BY 2 DESC
+) a
+LIMIT 1
+
+
+PYTHON:
+
+
+
+R:
+
