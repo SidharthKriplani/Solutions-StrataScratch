@@ -1,0 +1,20 @@
+POSTGRE SQL:
+
+WITH c1 AS
+(
+SELECT s.location, AVG(s.signup_stop_date - s.signup_start_date) AS mean_duration, AVG(t.amt) mean_revenue
+FROM signups s
+JOIN transactions t 
+ON s.signup_id = t.signup_id
+GROUP[ BY 1
+)
+
+SELECT location, mean_duration, mean_revenue, mean_revenue/mean_duration
+FROM c1
+order by 4 desc
+
+
+PYTHON:
+
+
+R:
