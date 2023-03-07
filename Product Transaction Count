@@ -1,0 +1,21 @@
+POSTGRE SQL:
+
+SELECT product_name, count 
+FROM
+(
+SELECT esid.product_name, esid.product_id, COUNT(*) AS count
+FROM excel_sql_transaction_data estd
+JOIN excel_sql_inventory_data esid
+ON estd.product_id = esid.product_id
+GROUP BY 1, 2
+ORDER BY esid.product_id ASC
+) a
+
+
+PYTHON:
+df = pd.merge(excel_sql_inventory_data, excel_sql_transaction_data, on = 'product_id', how = 'inner')
+df = df.groupby(['product_name', 'product_id'], as_index = False).size()
+df.sort_values('product_id', ascending = True)[['product_name', 'size']]
+
+
+R:
