@@ -1,0 +1,58 @@
+POSTGRE SQL:
+
+WITH main AS
+(
+SELECT DISTINCT user_id, EXTRACT(MONTH FROM time_id) AS month, DENSE_RANK() OVER(PARTITION BY user_id ORDER BY EXTRACT(MONTH FROM time_id) ASC) AS rankk
+FROM fact_events
+ORDER BY 1 ASC, 2 ASC
+), 
+
+new_users AS
+(
+SELECT month, COUNT(month) AS new_users
+FROM main 
+WHERE rankk = 1
+GROUP BY 1
+ORDER BY 1), 
+
+existing_users AS
+(
+SELECT 2 AS month, 0 AS existing_users
+FROM main 
+UNION
+SELECT month, COUNT(month) AS existing_users
+FROM main 
+WHERE rankk != 1
+GROUP BY 1
+ORDER BY 1)
+
+SELECT 
+eu.month, 
+ROUND(1.0*nu.new_users/(nu.new_users+eu.existing_users), 3), 
+ROUND(1.0*eu.existing_users/(nu.new_users+eu.existing_users), 3)
+FROM existing_users eu
+JOIN new_users nu
+ON eu.month = nu.month
+
+
+PYTHON:
+
+fact_events['month'] = fact_events['time_id'].dt.month
+
+main = fact_events[['user_id', 'month']].drop_duplicates()
+main['rank'] = main.groupby('user_id', as_index = False).rank(method = 'dense', ascending = True)
+main = main.sort_values(['user_id', 'month'], ascending = [True, True])
+
+new_users = main[main['rank']==1].groupby('month', as_index = False).size().rename(columns = {'size': 'new_users'})
+
+existing_users = main[main['rank']!=1].groupby('month', as_index = False).size().rename(columns = {'size': 'existing_users'})
+existing_users = existing_users.append({'month': 2, 'existing_users': 0}, ignore_index = True)
+
+df = pd.merge(new_users, existing_users, on = 'month', how = 'inner')
+df['total'] = df['new_users'] + df['existing_users']
+df['share_new_users'] = df['new_users']/df['total']
+df['share_existing_users'] = df['existing_users']/df['total']
+df[['month', 'share_new_users', 'share_existing_users']]
+
+
+R:
