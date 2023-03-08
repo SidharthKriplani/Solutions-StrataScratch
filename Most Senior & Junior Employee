@@ -1,0 +1,32 @@
+POSTGRE SQL:
+
+WITH shortest_tenured_count AS
+(
+SELECT hire_date, COUNT(*) AS cnt
+FROM uber_employees
+WHERE termination_date IS null
+GROUP BY 1
+ORDER BY 1
+LIMIT 1
+), 
+
+longest_tenured_count AS
+(
+SELECT hire_date, COUNT(*) AS cnt
+FROM uber_employees
+WHERE termination_date IS null
+GROUP BY 1
+ORDER BY 1 DESC
+LIMIT 1
+)
+
+SELECT
+(SELECT cnt FROM shortest_tenured_count) AS shortest_tenured_count,
+(SELECT cnt FROM longest_tenured_count) AS longest_tenured_count,
+datediff((SELECT hire_date FROM longest_tenured_count),
+         (SELECT hire_date FROM shortest_tenured_count) )
+FROM shortest_tenured_count 
+
+
+PYTHON:
+
