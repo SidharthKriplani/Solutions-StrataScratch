@@ -1,0 +1,30 @@
+POSTGRE SQL:
+
+WITH users_first_viewer AS
+(
+SELECT *, DENSE_RANK() OVER(PARTITION BY user_id ORDER BY session_start ASC) AS rankk
+FROM twitch_sessions
+)
+
+SELECT user_id, COUNT(*)
+FROM twitch_sessions
+WHERE user_id IN (
+SELECT user_id
+FROM users_first_viewer
+WHERE rankk = 1 AND session_type = 'viewer' ) 
+AND session_type = 'streamer'
+GROUP BY 1
+ORDER BY 2 DESC, 1 ASC
+
+
+PYTHON:
+twitch_sessions['rank'] = twitch_sessions[['session_start', 'user_id']].groupby('user_id').rank(method = 'dense', ascending = True)
+twitch_sessions = twitch_sessions.sort_values(['user_id', 'rank'], ascending = [True, True])
+
+selected_ids = twitch_sessions[(twitch_sessions['rank'] == 1) & (twitch_sessions['session_type']=='viewer')]['user_id']
+
+df = twitch_sessions[(twitch_sessions['user_id'].isin(selected_ids)) & (twitch_sessions['session_type'] == 'streamer')]
+df.groupby('user_id', as_index = False).size()
+
+
+R:
