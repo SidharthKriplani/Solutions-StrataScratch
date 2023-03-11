@@ -1,0 +1,67 @@
+POSTGRE SQL:
+
+WITH main AS
+(
+SELECT 
+wt.customer_id, 
+wt.store_id, 
+wt.transaction_date, 
+wt.transaction_id, 
+wt.product_id, 
+wt.sales, 
+ws.store_brand, 
+ws.location
+
+FROM wfm_transactions wt
+JOIN wfm_stores ws
+ON wt.store_id = ws.store_id
+WHERE EXTRACT(YEAR FROM wt.transaction_date) = 2017
+), 
+
+
+c1 AS
+(
+SELECT 
+customer_id, store_brand, total_transactions, total_sales, 
+CASE
+WHEN basket_size > 30 THEN 'High'
+WHEN basket_size <= 30 AND basket_size >= 20 THEN 'Medium'
+WHEN basket_size < 20 THEN 'Low' 
+END AS segment
+
+FROM
+(
+SELECT 
+customer_id, 
+store_brand, 
+COUNT(transaction_id) AS total_transactions, 
+SUM(sales) AS total_sales, 
+SUM(sales)/COUNT(transaction_id) AS basket_size
+
+FROM main
+WHERE EXTRACT(YEAR FROM transaction_date) = 2017
+GROUP BY 1, 2
+) a )
+
+
+SELECT 
+store_brand, 
+segment, 
+COUNT(customer_id) AS number_customers, 
+SUM(total_transactions) AS total_transactions, 
+SUM(total_sales) AS total_sales, 
+SUM(total_sales)/SUM(total_transactions) AS avg_basket_size
+
+FROM c1
+GROUP BY 1, 2
+ORDER BY 1 ASC, 3 DESC
+
+-- this is givng wrong value for avg_basket_size for 365 by WFM for the High segment because the transaction count is wrong too
+
+
+PYTHON:
+
+
+R:
+
+
