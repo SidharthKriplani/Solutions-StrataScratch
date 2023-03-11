@@ -1,0 +1,19 @@
+POSTGRE SQL:
+
+SELECT u1.id, (SELECT COUNT(*)
+               FROM uber_employees u2
+               WHERE u1.id != u2.id 
+               AND u2.hire_date > u1.hire_date 
+               AND u2.hire_date < COALESCE(u1.termination_date, current_date)
+               AND COALESCE(u2.termination_date, current_date) > u1.hire_date 
+               AND COALESCE(u2.termination_date, current_date) < COALESCE(u1.termination_date, current_date))
+FROM uber_employees u1
+ORDER BY 1
+
+-- saved this because this is a correlated subquery approach, but it isn't working at all so far
+
+
+PYTHON:
+
+
+R:
