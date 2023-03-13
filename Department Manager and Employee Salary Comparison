@@ -1,0 +1,39 @@
+POSTGRE SQL:
+
+WITH emp_salary AS
+(
+SELECT id, department, salary
+FROM employee_o
+WHERE employee_title != 'Manager'
+), 
+
+manager_salary AS
+(
+SELECT department, salary
+FROM employee_o
+WHERE employee_title = 'Manager'
+), 
+
+avg_department_salary AS
+(
+SELECT department, CAST(AVG(salary) AS DECIMAL(10, 0)) AS avg_sal
+FROM employee_o
+WHERE employee_title != 'Manager'
+GROUP BY 1
+)
+
+SELECT ds.department, es.id, 
+es.salary AS employee_salary, 
+ds.avg_sal AS avg_employee_salary,  
+ms.salary AS manager_salary
+
+FROM avg_department_salary ds
+JOIN emp_salary es ON ds.department = es.department
+JOIN manager_salary ms ON ms.department = ds.department
+ORDER BY 1 ASC, 3 DESC
+
+
+PYTHON:
+
+
+R:
