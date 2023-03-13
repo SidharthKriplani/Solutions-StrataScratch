@@ -1,0 +1,33 @@
+POSTGRE SQL:
+
+WITH c1 AS
+(
+SELECT *, DENSE_RANK() OVER(PARTITION BY name ORDER BY id DESC) AS rankk
+FROM nominee_filmography
+WHERE rating IS NOT NULL
+AND role_type = 'Normal Acting'
+), 
+
+avg_rating AS
+(
+SELECT name, CASE(AVG(rating) AS DECIMAL(10, 3)) AS lifetime_rating
+FROM nominee_filmography
+GROUP BY 1
+)
+
+SELECT a.name, a.rating, avg_rating.lifetime_rating, ABS(avg_rating.lifetime_rating - a.rating)
+FROM
+(
+SELECT *
+FROM c1 
+WHERE rankk = 2) a
+JOIN avg_rating 
+ON a.name = avg_rating.name
+
+--lifetime rating is coming out wrong for Jeremy Renner
+
+
+PYTHON:
+
+
+R:
