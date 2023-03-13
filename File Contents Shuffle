@@ -1,0 +1,16 @@
+POSTGRE SQL:
+
+SELECT 'wacky.txt' AS filename, STRING_AGG(components, ' ') AS contents
+FROM 
+(
+SELECT UNNEST(STRING_TO_ARRAY(contents, ' ')) AS components 
+FROM google_file_store
+WHERE filename = 'final.txt'
+ORDER BY 1
+) a
+
+
+PYTHON:
+
+
+R:
