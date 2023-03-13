@@ -1,0 +1,28 @@
+POSTGRE SQL:
+
+WITH expensive AS
+(
+SELECT region_1, variety, DENSE_RANK() OVER(PARTITION BY region_1 ORDER BY price DESC) AS rankk
+FROM winemag_pd
+WHERE region_1 IS NOT NULL
+), 
+
+cheapest AS
+(
+SELECT region_1, variety, DENSE_RANK() OVER(PARTITION BY region_1 ORDER BY price ASC) AS rankk
+FROM winemag_pd
+WHERE region_1 IS NOT NULL
+)
+
+SELECT DISTINCT expensive.region_1, expensive.variety AS most_expensive_variety, cheapest.variety AS cheapest_variety
+FROM expensive
+JOIN cheapest 
+ON expensive.variety = cheapest.variety
+ORDER BY 1 DESC
+
+-- solution should be somehting like this but the above one did not work 
+
+PYTHON:
+
+
+R:
