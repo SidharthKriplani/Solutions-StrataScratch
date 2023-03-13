@@ -1,0 +1,28 @@
+POSTGRE SQL:
+
+WITH c1 AS
+(
+SELECT restaurant_id, SUM(order_total) AS total_rev
+FROM doordash_delivery
+WHERE EXTRACT(YEAR FROM customer_placed_order_datetime) = 2020
+AND EXTRACT(MONTH FROM customer_placed_order_datetime) = 5
+GROUP BY 1
+), 
+
+c2 AS
+(
+SELECT CEIL(0.02*COUNT(*)) AS multiplier
+FROM c1)
+
+SELECT *    
+FROM c1
+WHERE total_rev < (SELECT SUM(total_rev) FROM c1)/50
+ORDER BY total_rev ASC
+LIMIT (SELECT multiplier FROM c2)
+
+
+PYTHON:
+
+
+R:
+
