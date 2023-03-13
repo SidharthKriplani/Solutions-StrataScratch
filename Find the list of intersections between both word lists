@@ -1,0 +1,32 @@
+POSTGRE SQL:
+
+SELECT w1
+FROM 
+(SELECT SPLIT_PART(words1, ',', 1) AS w1
+FROM google_word_lists
+UNION 
+SELECT SPLIT_PART(words1, ',', 2) AS w1
+FROM google_word_lists
+UNION
+SELECT SPLIT_PART(words1, ',', 3) AS w1
+FROM google_word_lists) a
+
+INTERSECT 
+
+select w2 
+from 
+(SELECT SPLIT_PART(words2, ',', 1) AS w2
+FROM google_word_lists
+UNION 
+SELECT SPLIT_PART(words2, ',', 2) AS w2
+FROM google_word_lists
+UNION
+SELECT SPLIT_PART(words2, ',', 3) AS w2
+FROM google_word_lists) b
+
+-- the above code gives a list which logically is correct but isn't the expected output. Maybe I should send this bug issue to stratascratch for resolution
+
+PYTHON:
+
+
+R:
