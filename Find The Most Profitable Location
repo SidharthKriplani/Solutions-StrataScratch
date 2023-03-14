@@ -1,19 +1,26 @@
 POSTGRE SQL:
 
-WITH c1 AS
+WITH signups_table AS
 (
-SELECT s.location, AVG(s.signup_stop_date - s.signup_start_date) AS mean_duration, AVG(t.amt) mean_revenue
+SELECT location, AVG(signup_stop_date - signup_start_date) AS mean_duration
+FROM signups 
+GROUP BY 1
+), 
+
+transactions_table AS
+(
+SELECT location, AVG(amt) AS mean_revenue
 FROM signups s
 JOIN transactions t 
 ON s.signup_id = t.signup_id
-GROUP[ BY 1
+GROUP BY 1
 )
 
-SELECT location, mean_duration, mean_revenue, mean_revenue/mean_duration
-FROM c1
-order by 4 desc
-
--- solution isn't returning the specific result, but is near about the same
+SELECT st.location, st.mean_duration, tt.mean_revenue, tt.mean_revenue/st.mean_duration
+FROM transactions_table tt 
+JOIN signups_table st 
+ON tt.location = st.location
+ORDER BY 4 DESC
 
 
 PYTHON:
