@@ -7,6 +7,11 @@ ORDER BY 1, 2 DESC
 
 
 PYTHON:
+crunchbase_acquisitions = crunchbase_acquisitions.groupby('acquired_quarter', as_index = False).size().rename(columns = {'size': 'cnt'})
+crunchbase_acquisitions = crunchbase_acquisitions.sort_values(['acquired_quarter', 'cnt'], ascending = [True, False])
+crunchbase_acquisitions
+
+-- there is just one issue. The value of 'acquired_quarter' is different in SQL and in Python. So the Python solution is not getting accepted
 
 
 R:
