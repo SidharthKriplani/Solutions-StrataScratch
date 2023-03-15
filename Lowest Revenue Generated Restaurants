@@ -12,7 +12,8 @@ GROUP BY 1
 c2 AS
 (
 SELECT CEIL(0.02*COUNT(*)) AS multiplier
-FROM c1)
+FROM c1
+)
 
 SELECT *    
 FROM c1
@@ -22,6 +23,17 @@ LIMIT (SELECT multiplier FROM c2)
 
 
 PYTHON:
+
+import pandas as pd, math
+
+doordash_delivery = doordash_delivery[(doordash_delivery['customer_placed_order_datetime'].dt.year == 2020) & (doordash_delivery['customer_placed_order_datetime'].dt.month == 5)]
+
+df1 = doordash_delivery.groupby('restaurant_id', as_index = False)['order_total'].sum()
+
+multiplier = math.ceil(0.02*len(df1))
+total = sum(df1['order_total'])/50
+
+df1[df1['order_total']<total].sort_values('order_total', ascending = True).head(multiplier)
 
 
 R:
