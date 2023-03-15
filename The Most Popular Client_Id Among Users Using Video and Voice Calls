@@ -13,6 +13,11 @@ LIMIT 1
 
 PYTHON:
 
+import pandas as pd, numpy as np
+
+fact_events['clear'] = np.where(fact_events['event_type'].isin(['video call received', 'video call sent', 'voice call received', 'voice call sent']), 1, 0)
+fact_events = fact_events.groupby('client_id', as_index = False)['clear'].sum().sort_values('clear', ascending = False)
+fact_events.loc[0][0]
 
 
 R:
