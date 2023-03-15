@@ -11,7 +11,8 @@ crunchbase_acquisitions = crunchbase_acquisitions.groupby('acquired_quarter', as
 crunchbase_acquisitions = crunchbase_acquisitions.sort_values(['acquired_quarter', 'cnt'], ascending = [True, False])
 crunchbase_acquisitions
 
--- there is just one issue. The value of 'acquired_quarter' is different in SQL and in Python. So the Python solution is not getting accepted
+-- there is just one issue. The value of 'acquired_quarter' is different in SQL and in Python. So the Python solution is not getting accepted. The funny thing is, this 
+problem is an EASY SQL problem, but a HARD Python problem. So maybe that is the reason I can't just convert my above SQL solution to Python and have it accepted
 
 
 R:
