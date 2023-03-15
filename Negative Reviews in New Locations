@@ -1,0 +1,57 @@
+POSTGRE SQL:
+
+WITH c1 AS
+(
+SELECT inr.id, inr.customer_id, inr.store_id, inr.score, ins.name, ins.zipcode, ins.opening_date
+FROM instacart_stores ins
+JOIN instacart_reviews inr
+ON ins.id = inr.store_id
+), 
+
+c2 AS
+(
+SELECT name, 
+1.0*SUM(CASE WHEN score < 5 THEN 1 ELSE 0 END)/ 
+SUM(CASE WHEN score >=5 THEN 1 END 0 END) AS ratio, 
+
+100.0*SUM(CASE WHEN score < 5 THEN 1 ELSE 0 END)/ 
+(SUM(CASE WHEN score < 5 THEN 1 ELSE 0 END)+
+SUM(CASE WHEN score >=5 THEN 1 ELSE 0 END)) AS neg_perc
+FROM c1 
+WHERE EXTRACT(YEAR FROM opening_date) = 2021 
+AND EXTRACT(MONTH FROM opening_date) IN (7, 8, 9, 10, 11, 12) 
+GROUP BY 1
+)
+
+SELECT name, ratio
+FROM c2 
+WHERE neg_perc > 20
+
+
+PYTHON:
+
+import pandas as pd, numpy as np
+
+instacart_stores = instacart_stores.rename(columns = {'id': 'store_id'}) 
+
+df = pd.merge(instacart_reviews, instacart_stores, on = 'store_id', how = 'inner')
+df = df[(df['opening_date'].dt.year==2021) & (df['opening_date'].dt.month.isin([7, 8, 9, 10, 11, 12]))]
+
+df['negs'] = np.where(df['score']<5, 1, 0)
+df['pos'] = np.where(df['score']>=5, 1, 0)
+
+df_negs = df.groupby('name', as_index = False)['negs'].sum()
+df_pos = df.groupby('name', as_index = False)['pos'].sum()
+
+df = pd.merge(df_negs, df_pos, on = 'name', how = 'inner')
+
+df['ratio'] = df['negs']/(df['negs']+df['pos'])
+
+df = df[df['ratio']>0.2]
+
+df['negative_positive_ratio'] = df['negs']/df['pos']
+
+df[['name', 'negative_positive_ratio']]
+
+
+R:
