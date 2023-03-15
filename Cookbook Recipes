@@ -1,0 +1,31 @@
+POSTGRE SQL:
+
+WITH c1 AS
+(
+SELECT generate_series as series
+FROM GENERATE_SERIES(0, 15)
+), 
+
+c2 AS
+(
+SELECT 
+c1.series AS left_page_number, 
+ct.title AS left_title, 
+LEAD(ct.title) OVER(ORDER BY c1.series) AS right_title
+FROM cookbook_titles ct 
+RIGHT JOIN c1 on ct.page_number = c1.series
+)
+
+SELECT *
+FROMc2 
+WHERE left_page_number IN (0, 2, 4, 6, 8, 10, 12, 14)
+
+
+PYTHON:
+ser = pd.DataFrame([n for n in range(0, 16)]).rename(columns = {0: 'page_number'})
+df = pd.merge(ser, cookbook_titles, on = 'page_number', how = 'left').rename(columns = {'title': 'left_title'})
+df['right_title'] = list(df['left_title'][1:])+list(' ')
+df[df['page_number'].isin([0, 2, 4, 6, 8, 10, 12, 14])]
+
+
+R:
