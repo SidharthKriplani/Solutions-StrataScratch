@@ -25,5 +25,15 @@ ORDER BY 4 DESC
 
 PYTHON:
 
+signups['signup_days_diff'] = [i.days for i in (signups['signup_stop_date'] - signups['signup_start_date'])]
+signups_table = signups.groupby('location', as_index = False)['signup_days_diff'].mean().rename(columns = {'signup_days_diff': 'mean_duration'})
+
+transactions_table = pd.merge(signups, transactions, on = 'signup_id', how = 'inner').groupby('location', as_index = False)['amt'].mean().rename(columns = {'amt': 'mean_revenue'})
+
+df = pd.merge(transactions_table, signups_table, on = 'location', how = 'inner')
+df['ratio'] = df['mean_revenue']/df['mean_duration']
+
+df[['location', 'mean_revenue', 'mean_duration', 'ratio']]
+
 
 R:
