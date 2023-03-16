@@ -23,7 +23,7 @@ ORDER BY date
 
 SELECT
 t2.date, 
-t2.total_downloads AS non_paying_cusutomer, 
+t2.total_downloads AS non_paying_customer, 
 t3.total_downloads AS paying_customer 
 FROM
 (SELECT date, total_downloads FROM c2 WHERE paying_customer = 'no') t2
@@ -35,6 +35,16 @@ ORDER BY t2.date
 
 
 PYTHON:
+
+df = pd.merge(pd.merge(ms_user_dimension, ms_acc_dimension, on = 'acc_id', how = 'inner'), ms_download_facts, on = 'user_id', how = 'inner')
+df = df.groupby(['date', 'paying_customer'], as_index = False)['downloads'].sum()
+
+df_no = df[df['paying_customer']=='no']
+df_yes = df[df['paying_customer']=='yes']
+
+df = pd.merge(df_no, df_yes, on = 'date', how = 'inner', suffixes = ('_no', '_yes'))
+
+df[df['downloads_no']>df['downloads_yes']][['date', 'downloads_no', 'downloads_yes']]
 
 
 R:
