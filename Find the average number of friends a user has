@@ -22,14 +22,12 @@ FROM c1
 
 PYTHON:
 
-df = pd.concat(
-    [google_friends_network[['user_id', 'friend_id']], 
-     google_friends_network[['friend_id', 'user_id']]], 
-     ignore_index = True).drop_duplicates()
+df1 = google_friends_network.groupby('user_id', as_index = False).size().rename(columns = {'user_id': 'id'})
+df2 = google_friends_network.groupby('friend_id', as_index = False).size().rename(columns = {'friend_id': 'id'})
+df = pd.merge(df1, df2, on = 'id', how = 'outer').fillna(0)
+sum(df['size_x'] + df['size_y'])/len(df['size_x'] + df['size_y'])
 
-df.groupby('user_id', as_index = False).size()
-
-(python isn't returning the desired result corretly)
+# I am getting 1 extra value for both 1 and 12. It should be 5 and 1 respectively (according to my SQL query) but I am getting 6 and 2.
 
 
 R:
