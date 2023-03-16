@@ -35,5 +35,15 @@ ORDER BY 1 ASC, 3 DESC
 
 PYTHON:
 
+emp_salary = employee_o[employee_o['employee_title']!='Manager'][['id', 'department', 'salary']].rename(columns = {'id': 'emp_id', 'salary': 'emp_sal'})
+manager_salary = employee_o[employee_o['employee_title']=='Manager'][['department', 'salary']].rename(columns = {'salary': 'manager_salary'})
+avg_dept_sal = employee_o[employee_o['employee_title']!='Manager'].groupby('department', as_index = False)['salary'].mean().rename(columns = {'salary': 'avg_sal'})
+
+avg_dept_sal['avg_sal'] = round(avg_dept_sal['avg_sal'], 0)
+
+df = pd.merge(pd.merge(emp_salary, manager_salary, on = 'department', how = 'inner'), avg_dept_sal, on = 'department', how = 'inner')
+
+df[['department', 'emp_id', 'emp_sal', 'manager_salary', 'avg_sal']].sort_values(['department', 'emp_sal'], ascending = [True, False])
+
 
 R:
