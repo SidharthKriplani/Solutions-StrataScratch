@@ -1,0 +1,38 @@
+POSTGRE SQL:
+
+WITH lowest_inspection_score AS
+(
+SELECT business_name, inspection_score, 
+DENSE_RANK() OVER(PARTITION BY business_name ORDER BY inspection_score ASC) min_score
+FROM sf_restaurant_health_violations
+WHERE inspection_score IS NOT NULL
+), 
+
+highest_inspection_score AS
+(
+SELECT business_name, inspection_score, 
+DENSE_RANK() OVER(PARTITION BY business_name ORDER BY inspection_score DESC) max_score
+FROM sf_restaurant_health_violations
+WHERE inspection_score IS NOT NULL
+)
+
+SELECT DISTINCT
+a.business_name, a.inspection_score min_score, b.inspection_score max_score
+FROM
+(SELECT business_name, inspection_score
+FROM lowest_inspection_score 
+WHERE min_score = 1) a
+JOIN 
+(SELECT business_name, inspection_score
+FROM highest_inspection_score
+WHERE max_score = 1) b
+
+ON a.business_name = b.business_name
+WHERE a.inspection_score != b.inspection_score 
+ORDER BY 1
+
+
+PYTHON:
+
+
+R:
