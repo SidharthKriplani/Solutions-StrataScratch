@@ -1,0 +1,52 @@
+POSTGRE SQL:
+
+WITH first_inspection AS
+(
+SELECT business_postal_code, inspection_date, 
+DENSE_RANK() OVER(PARTITION BY business_postal_code ORDER BY inspection_date ASC) first_inspection_date
+FROM sf_restaurant_health_violations
+WHERE violation_description LIKE '%vermin%'
+), 
+
+last_inspection AS
+(
+SELECT business_postal_code, inspection_date, 
+DENSE_RANK() OVER(PARTITION BY business_postal_code ORDER BY inspection_date DESC) last_inspection_date
+FROM sf_restaurant_health_violations
+WHERE violation_description LIKE '%vermin%'
+)
+
+SELECT a.business_postal_code,  a.inspection_date first_inspection, b.inspection_date last_inspection
+FROM
+(SELECT business_postal_code, inspection_date
+FROM first_inspection 
+WHERE first_inspection_date = 1) a
+JOIN 
+(SELECT business_postal_code, inspection_date
+FROM last_inspection
+WHERE last_inspection_date = 1) b
+
+ON a.business_postal_code = b.business_postal_code
+
+
+PYTHON:
+
+first_inspection = sf_restaurant_health_violations[['business_postal_code', 'inspection_date']].rename(columns = {'inspection_date': 'first_inspection'})
+last_inspection = sf_restaurant_health_violations[['business_postal_code', 'inspection_date']].rename(columns = {'inspection_date': 'last_inspection'})
+
+first_inspection['rank'] = sf_restaurant_health_violations.groupby('business_postal_code', as_index = False)['inspection_date'].rank(method = 'dense', ascending = True)
+last_inspection['rank'] = sf_restaurant_health_violations.groupby('business_postal_code', as_index = False)['inspection_date'].rank(method = 'dense', ascending = False)
+
+first_inspection = first_inspection[first_inspection['rank']==1][['business_postal_code', 'first_inspection']]
+last_inspection = last_inspection[last_inspection['rank']==1][['business_postal_code', 'last_inspection']]
+
+df = pd.merge(first_inspection, last_inspection, on = 'business_postal_code', how = 'inner')
+df['first_inspection'] = df['first_inspection'].dt.date
+df['last_inspection'] = df['last_inspection'].dt.date
+df
+
+-- above solution isn't working correctly. There may be some minor kink in it
+
+
+R:
+
