@@ -1,0 +1,47 @@
+POSTGRE SQL:
+
+WITH main AS
+(
+SELECT owner_name, facility_address, facility_name, AVG(score) AS avg_score
+FROM los_angeles_restaurant_health_inspections 
+GROUP BY 1, 2, 3
+), 
+
+main_2 AS
+(
+SELECT owner_name, facility_name, facility_address, 
+DENSE_RANK() OVER(PARTITION BY owner_name ORDER BY avg_score DESC, facility_name ASC) rankk
+FROM main
+), 
+
+one AS
+(SELECT owner_name, facility_address
+FROM main_2
+WHERE rankk = 1), 
+
+two AS 
+(SELECT owner_name, facility_address
+FROM main_2
+WHERE rankk = 2), 
+
+three AS 
+(SELECT owner_name, facility_address
+FROM main_2
+WHERE rankk = 3)
+
+SELECT DISTINCT
+one.owner_name, 
+one.facility_address AS facility_1, 
+two.facility_address AS facility_2, 
+three.facility_address AS facility_3
+
+FROM one
+LEFT JOIN two ON one.owner_name = two.owner_name
+LEFT JOIN three ON one.owner_name = three.owner_name
+ORDER BY 1 ASC
+
+
+PYTHON:
+
+
+R:
