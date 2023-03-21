@@ -1,0 +1,51 @@
+POSTGRE SQL:
+
+with c0 as 
+(
+select
+case
+when facility_name like '%#%' then  
+concat(split_part(facility_name, ' ', 1), ' ', split_part(facility_name, ' ', 2)) else facility_name end as facility_name, 
+score, activity_date
+from los_angeles_restaurant_health_inspections
+), 
+
+c1 as 
+(
+select facility_name, score, activity_date, 
+dense_rank() over(partition by facility_name order by score desc) as score_rank
+from c0
+where facility_name like '%RESTAURANT%'
+), 
+
+c2 as 
+(
+select 
+facility_name, 
+score, 
+activity_date, 
+(activity_date - lead(activity_date) over(partition by facility_name order by activity_date desc)) as number_of_days_between_high_scoring_inspections,
+lead(activity_date) over(partition by facility_name order by activity_date desc) as prev_activity_date, 
+dense_rank() over(partition by facility_name order by activity_date desc) as date_rank
+
+from c1
+where score_rank = 1
+)
+
+select 
+facility_name, 
+score, 
+activity_date, 
+prev_activity_date,  
+number_of_days_between_high_scoring_inspections
+
+from c2 
+where date_rank = 1
+
+-- still getting some errors: durango shouldn't be there, why not? what does the question say? denny is fine, but the facility name should include the facility number 
+
+
+PYTHON:
+
+
+R:
