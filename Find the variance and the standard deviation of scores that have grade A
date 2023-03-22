@@ -1,0 +1,32 @@
+POSTGRE SQL:
+
+WITH c1 AS
+(
+SELECT 
+score-(SELECT AVG(score) FROM los_angeles_restaurant_health_inspections WHERE grade = 'A') AS xa
+FROM los_angeles_restaurant_health_inspections
+WHERE grade = 'A'
+), 
+
+variance AS
+(
+SELECT AVG(xa*xa) AS var 
+FROM c1
+), 
+
+stdev AS
+(
+SELECT SQRT(var) AS std
+FROM variance
+)
+
+SELECT DITINCT 
+(SELECT var FROM variance) AS variance, 
+(SELECT std FROM stdev) AS std
+FROM c1
+
+
+PYTHON:
+
+
+R:
