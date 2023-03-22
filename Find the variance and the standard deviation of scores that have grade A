@@ -20,7 +20,7 @@ SELECT SQRT(var) AS std
 FROM variance
 )
 
-SELECT DITINCT 
+SELECT DISTINCT 
 (SELECT var FROM variance) AS variance, 
 (SELECT std FROM stdev) AS std
 FROM c1
