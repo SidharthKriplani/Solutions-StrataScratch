@@ -1,0 +1,38 @@
+POSTGRE SQL:
+
+WITH c1 AS 
+(
+SELECT 
+facility_name,  
+EXTRACT(YEAR FROM activity_date) AS year, 
+COUNT(*) AS cnt
+FROM los_angeles_restaurant_health_inspections
+GROUP BY facility_name, EXTRACT(YEAR FROM activity_date)
+), 
+
+c2 AS
+(
+SELECT facility_name, year, cnt, 
+DENSE_RANK() OVER(PARTITION BY facility_name ORDER BY cnt desc) AS rankk
+FROM c1
+), 
+
+c3 AS 
+(SELECT facility_name, year, cnt, cnt - LEAD(cnt) OVER(PARTITION BY facility_name ORDER BY cnt DESC) AS chq
+FROM c2
+WHERE rankk = 1)
+
+SELECT facility_name, year
+FROM c3 
+WHERE year = 2017 AND facility_name NOT IN (SELECT facility_name 
+                                            FROM c3 
+                                            WHERE chq IS NOT NULL)
+                                            
+                                            
+PYTHON:
+
+
+R:
+
+
+PYSPARK:
