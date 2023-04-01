@@ -28,7 +28,7 @@ winemag_p2.sort_values(['taster_name', 'variety'], ascending = [True, False])
 winemag_p2['rank'] = winemag_p2.groupby('taster_name', as_index = False)['cnt'].rank(method = 'dense', ascending = False)
 
 winemag_p2[['taster_name', 'variety']][winemag_p2['rank'] == 1]
-
+ 
  
 R:
 
