@@ -31,6 +31,6 @@ df = df[df['winner']=='True'][['winner', 'name', 'top_genre']]
 person = list(df.groupby('name', as_index = False).size().rename(columns = {'size': 'cnt'}).sort_values(by = ['cnt', 'name'], ascending = [False, True])['name'])[0]
 nominee_information[nominee_information['name'] == person]['top_genre']
 
-
+ 
 R:
 
