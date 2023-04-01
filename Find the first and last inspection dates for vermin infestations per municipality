@@ -43,7 +43,7 @@ last_inspection = last_inspection[last_inspection['rank']==1][['business_postal_
 df = pd.merge(first_inspection, last_inspection, on = 'business_postal_code', how = 'inner')
 df['first_inspection'] = df['first_inspection'].dt.date
 df['last_inspection'] = df['last_inspection'].dt.date
-df
+df 
 
 -- above solution isn't working correctly. There may be some minor kink in it
 
