@@ -26,7 +26,7 @@ FROM google_word_lists) b
 
 -- the above code gives a list which logically is correct but isn't the expected output. Maybe I should send this bug issue to stratascratch for resolution
 
-PYTHON:
+PYTHON: 
 
 
 R:
