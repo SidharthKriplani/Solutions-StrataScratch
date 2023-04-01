@@ -1,0 +1,47 @@
+POSTGRE SQL:
+
+WITH c1 AS
+(SELECT *, 
+CASE 
+WHEN number_of_reviews = 0 THEN 'New'
+WHEN number_of_reviews >= 1 AND number_of_reviews <=5 THEN 'Rising'
+WHEN number_of_reviews >= 6 AND number_of_reviews <=15 THEN 'Trending Up'
+WHEN number_of_reviews >= 16 AND number_of_reviews <=40 THEN 'Popular'
+WHEN number_of_reviews >40 THEN 'Hot' END AS popularity
+FROM airbnb_host_searches
+), 
+
+minimum AS
+(SELECT popularity, MIN(price) AS min_price
+FROM c1
+GROUP BY 1), 
+
+maximum AS
+(
+SELECT popularity, MAX(price) AS max_price
+FROM c1
+GROUP BY 1
+), 
+
+average AS
+(
+SELECT popularity, AVG(price) AS avg_price
+FROM c1
+GROUP BY 1
+)
+
+SELECT aver.popularity, mini.min_price, aver.avg_price, maxi.max_price
+FROM average aver
+JOIN minimum mini ON mini.popularity = aver.popularity
+JOIN maximum maxi ON maxi.popularity = aver.popularity
+
+--for new, hot, and rising, the avg price is a little off 
+
+
+PYTHON:
+
+
+R:
+
+
+PYSPARK:
