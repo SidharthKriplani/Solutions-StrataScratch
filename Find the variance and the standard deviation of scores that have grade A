@@ -28,5 +28,13 @@ FROM c1
 
 PYTHON:
 
+df = los_angeles_restaurant_health_inspections
+xa = df[df['grade']=='A']['score'] - df[df['grade']=='A']['score'].mean()
+var = sum(xa*xa)/len(xa)
+pd.DataFrame([[sum(xa*xa)/len(xa), math.sqrt(var)]], columns = [['variance', 'std']])
+
 
 R:
+
+
+PYSPARK:
