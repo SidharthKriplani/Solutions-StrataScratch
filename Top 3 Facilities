@@ -43,5 +43,25 @@ ORDER BY 1 ASC
 
 PYTHON:
 
+main = los_angeles_restaurant_health_inspections.groupby(['owner_name', 'facility_address', 'facility_name'], as_index = False)['score'].mean().rename(columns = {'score': 'avg_score'})
+main_2 = main[['owner_name', 'facility_name', 'facility_address']]
+main_2['rankk'] = main.groupby('owner_name', as_index = False)[['avg_score', 'facility_name']].rank(method = 'dense', ascending = [False, True]).astype(int)
+
+one = main_2[main_2['rankk']==1]
+one = one.rename(columns = {'facility_address': 'facility_1'})
+two = main_2[main_2['rankk']==2]
+two = two.rename(columns = {'facility_address': 'facility_2'})
+three = main_2[main_2['rankk']==3]
+three = three.rename(columns = {'facility_address': 'facility_3'})
+
+one_two = pd.merge(one, two, on = 'owner_name', how = 'left')
+one_two = one_two[['facility_1', 'owner_name', 'facility_2']]
+one_three = pd.merge(one, three, on = 'owner_name', how = 'left')
+one_three = one_three[['facility_3', 'owner_name']]
+
+pd.merge(one_two, one_three, on = 'owner_name', how = 'inner')
+
+-- this Python solution is not working correctly, some rows missing here or there 
+
 
 R: 
