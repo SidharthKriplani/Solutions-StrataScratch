@@ -10,8 +10,8 @@ AND role_type = 'Normal Acting'
 
 avg_rating AS
 (
-SELECT name, CASE(AVG(rating) AS DECIMAL(10, 3)) AS lifetime_rating
-FROM nominee_filmography
+SELECT name, CAST(AVG(rating) AS DECIMAL(10, 3)) AS lifetime_rating
+FROM c1
 GROUP BY 1
 )
 
@@ -24,10 +24,15 @@ WHERE rankk = 2) a
 JOIN avg_rating 
 ON a.name = avg_rating.name
 
---lifetime rating is coming out wrong for Jeremy Renner
-
 
 PYTHON:
+
+df = nominee_filmography[(nominee_filmography['rating'].notnull()) & (nominee_filmography['role_type']=='Normal Acting')]
+df['rankk'] = df.groupby('name', as_index = False)['id'].rank(method = 'dense', ascending = False).astype(int)
+avg_rating = df.groupby('name', as_index = False)['rating'].mean().rename(columns = {'rating': 'lifetime_rating'})
+df_final = pd.merge(df[df['rankk'] == 2], avg_rating, on = 'name', how = 'inner')
+df_final['variance'] = abs(df_final['lifetime_rating'] - df_final['rating'])
+df_final[['name', 'rating', 'lifetime_rating', 'variance']]
 
 
 R:
