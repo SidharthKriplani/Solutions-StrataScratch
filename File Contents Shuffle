@@ -12,5 +12,14 @@ ORDER BY 1
 
 PYTHON:
 
+string = google_file_store[google_file_store['filename']=='final.txt']['contents'].iloc[0].split(' ')
+string = sorted([x.lower() for x in string])
+out = ' '.join(string)
+pd.DataFrame([['wacky.txt', out]], columns = [['filename', 'content']])
+
 
 R:
+
+
+PYSPARK:
+
