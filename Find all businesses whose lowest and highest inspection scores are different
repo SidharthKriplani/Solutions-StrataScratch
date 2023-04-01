@@ -34,5 +34,17 @@ ORDER BY 1
 
 PYTHON:
 
+lowest_inspection_score = sf_restaurant_health_violations[['business_name', 'inspection_score']]
+lowest_inspection_score['min_score'] = sf_restaurant_health_violations[sf_restaurant_health_violations['inspection_score'].notnull()].groupby('business_name', as_index = False)['inspection_score'].rank(method = 'dense', ascending = True)
+
+highest_inspection_score = sf_restaurant_health_violations[['business_name', 'inspection_score']]
+highest_inspection_score['max_score'] = sf_restaurant_health_violations[sf_restaurant_health_violations['inspection_score'].notnull()].groupby('business_name', as_index = False)['inspection_score'].rank(method = 'dense', ascending = False)
+
+his = highest_inspection_score[highest_inspection_score['max_score']==1][['business_name', 'inspection_score']].rename(columns = {'inspection_score': 'min_score'})
+lis = lowest_inspection_score[lowest_inspection_score['min_score']==1][['business_name', 'inspection_score']].rename(columns = {'inspection_score': 'max_score'})
+
+df = pd.merge(his, lis, on = 'business_name')
+df[df['min_score']!=df['max_score']].drop_duplicates()
+
 
 R:
