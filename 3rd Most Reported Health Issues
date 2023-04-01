@@ -29,5 +29,15 @@ OR facility_name LIKE '%JUICE%')
 
 PYTHON:
 
+df = los_angeles_restaurant_health_inspections
+df_cafe = df[df.facility_name.str.contains('CAFE', regex = True, na = False)]
+df_tea = df[df.facility_name.str.contains('TEA', regex = True, na = False)]
+df_resto = df[df.facility_name.str.contains('JUICE', regex = True, na = False)]
+df1 = pd.concat([df_cafe, df_tea, df_resto])
+df2 = df.groupby(['pe_description'], as_index = False).size().rename(columns = {'size':'cnt'}).sort_values('cnt', ascending = False)
+df2
+
+-- above Python solution is not working 
+
 
 R:
