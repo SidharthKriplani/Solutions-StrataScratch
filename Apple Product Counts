@@ -1,5 +1,30 @@
 POSTGRE SQL:
 
+WITH main AS
+(SELECT pu.language, pe.user_id, pe.device
+FROM playbook_events pe
+INNER JOIN playbook_users pu
+ON pu.user_id = pe.user_id), 
+
+apple_users AS
+(SELECT *
+FROM main
+WHERE device IN ('macbook pro', 'iphone 5', 'ipad air'))
+
+SELECT a.language, a.n_total_users, b.n_apple_users
+FROM
+(SELECT language, COUNT(*) AS n_total_users
+FROM main
+GROUP BY 1) a 
+JOIN
+(SELECT language, COUNT(*) AS n_apple_users
+FROM apple_users
+GROUP BY 1) b
+ON a.language = b.language
+ORDER BY 2 DESC
+
+--solution isn't giving correct counts
+
 
 PYTHON:
 
