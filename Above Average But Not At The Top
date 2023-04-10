@@ -1,5 +1,26 @@
 POSTGRE SQL:
 
+WITH c1 AS
+(
+SELECT employeename, jobtitle, totalpay,
+DENSE_RANK() OVER(PARTITION BY jobtitle ORDER BY totalpay DESC) AS rankk
+FROM sf_public_salaries
+WHERE year = 2013
+), 
+
+averages AS
+(SELECT jobtitle, AVG(totalpay) AS avg_pay
+FROM sf_public_salaries
+WHERE year = 2013
+GROUP BY 1)
+
+SELECT c1.employeename
+FROM c1 
+JOIN averages
+ON c1.jobtitle = averages.jobtitle
+WHERE c1.rankk NOT IN (1, 2, 3, 4, 5)
+AND totalpay>avg_pay
+
 
 PYTHON:
 
