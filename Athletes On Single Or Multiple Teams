@@ -1,5 +1,28 @@
 POSTGRE SQL:
 
+WITH main AS
+(SELECT a.name, COUNT(a.*) AS cnt 
+FROM 
+(SELECT name, team
+FROM olympics_athletes_events
+WHERE team NOT LIKE '%/%'
+UNION
+SELECT name, SPLIT_PART(team, '/', 1)
+FROM olympics_athletes_events
+WHERE team LIKE '%/%'
+UNION
+SELECT name, SPLIT_PART(team, '/', 2)
+FROM olympics_athletes_events
+WHERE team LIKE '%/%') a
+GROUP BY 1)
+
+SELECT name, 
+CASE
+WHEN cnt = 1 THEN 'One Team'
+WHEN cnt > 1 THEN 'Multiple Teams'
+END AS number_of_teams
+FROM main
+
 
 PYTHON:
 
