@@ -1,5 +1,23 @@
 POSTGRE SQL:
 
+WITH c1 AS
+(
+SELECT EXTRACT(YEAR FROM host_since) AS year, COUNT(host_identity_verified) cnt 
+FROM airbnb_search_details
+GROUP BY 1
+ORDER BY 1
+), 
+
+c2 AS
+(
+SELECT year, cnt,  LAG(cnt, 1) OVER(ORDER BY year) prev_year_cnt
+FROM c1
+)
+
+SELECT year, cnt current_year_host, prev_year_cnt prev_year_host, 
+ROUND(100.0*(cnt - prev_year_cnt)/prev_year_cnt) estimated_growth
+FROM c2
+
 
 PYTHON:
 
