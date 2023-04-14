@@ -1,5 +1,23 @@
 POSTGRE SQL:
 
+WITH c1 AS
+(
+SELECT
+user_id, 
+CONCAT(LAG(action) OVER(PARTITION BY user_id ORDER BY timestamp), '_', action) AS coupled_action, 
+timestamp AS scroll_time, 
+LAG(timestamp) OVER(PARTITION BY user_id ORDER BY timestamp) AS load_time, 
+(timestamp - LAG(timestamp) OVER(PARTITION BY user_id ORDER BY timestamp)) AS duration 
+FROM facebook_web_log
+WHERE action IN ('page_load', 'scroll_down')
+)
+
+SELECT user_id, load_time, scroll_time, CONCAT('', duration)
+FROM c1
+WHERE coupled_action = 'page_load_scroll_down'
+ORDER BY 4 ASC
+LIMIT 1
+
 
 PYTHON:
 
