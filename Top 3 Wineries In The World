@@ -1,5 +1,40 @@
 POSTGRE SQL:
 
+WITH avg_points AS
+(
+SELECT winery, AVG(points) AS avgpoints
+FROM winemag_p1
+GROUP BY 1
+), 
+
+c1 AS
+(
+SELECT DISTINCT a.winery, a.avgpoints::INT, b.country, DENSE_RANK() OVER(PARTITION BY b.country ORDER BY a.avgpoints DESC, a.winery ASC) AS rankk
+FROM avg_points a
+JOIN winemag_p1 b
+ON a.winery = b.winery
+), 
+
+c2 AS
+(
+SELECT DISTINCT country, CONCAT(winery, ' (', avgpoints, ')') wineries, rankk
+FROM c1
+WHERE rankk < 4
+)
+
+SELECT country, 
+MAX(top_winery) top_winery, 
+COALESCE(MAX(second_winery), 'No second winery') second_winery, 
+COALESCE(MAX(third_winery), 'No third winery') third_winery
+FROM
+(SELECT country, 
+CASE WHEN rankk = 1 THEN wineries END AS top_winery,
+CASE WHEN rankk = 2 THEN wineries END AS second_winery, 
+CASE WHEN rankk = 3 THEN wineries END AS third_winery
+FROM c2) a
+GROUP BY 1
+ORDER BY 1
+
 
 PYTHON:
 
