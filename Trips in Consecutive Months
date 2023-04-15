@@ -1,5 +1,21 @@
 POSTGRE SQL:
 
+WITH c1 AS
+(
+SELECT driver_id, trip_date, EXTRACT(MONTH FROM trip_date) AS month
+FROM uber_trips
+WHERE is_completed = 'TRUE'
+), 
+
+c2 AS 
+(SELECT driver_id, month-
+COALESCE(LAG(MONTH) OVER(PARTITION BY driver_id ORDER BY month ASC), 0) AS month_diff
+FROM c1 )
+
+SELECT DISTINCT driver_id
+FROM c2
+WHERE month_diff = 1
+
 
 PYTHON:
 
