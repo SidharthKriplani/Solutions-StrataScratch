@@ -1,5 +1,36 @@
 POSTGRE SQL:
 
+WTIH c1 AS
+(
+SELECT medal, year, COUNT(*) AS cnt
+FROM olympics_athletes_events
+WHERE team = 'China'
+AND year between 2000 and 2016
+GROUP BY 1, 2
+), 
+
+c2 AS
+(SELECT medal, 
+MAX(medal_2000) AS medal_2000,
+MAX(medal_2004) AS medal_2004,
+MAX(medal_2008) AS medal_2008,
+MAX(medal_2012) AS medal_2012,
+MAX(medal_2016) AS medal_2016
+FROM
+(SELECT
+medal, 
+CASE WHEN year = 2000 THEN cnt ELSE 0 END AS medal_2000, 
+CASE WHEN year = 2004 THEN cnt ELSE 0 END AS medal_2004,
+CASE WHEN year = 2008 THEN cnt ELSE 0 END AS medal_2008,
+CASE WHEN year = 2012 THEN cnt ELSE 0 END AS medal_2012,
+CASE WHEN year = 2016 THEN cnt ELSE 0 END AS medal_2016
+FROM c1) a
+GROUP BY 1)
+
+SELECT medal, medal_2000, medal_2004, medal_2008, medal_2012, medal_2016, 
+medal_2000+medal_2004+medal_2008+medal_2012+medal_2016 AS total_medals 
+FROM c2
+
 
 PYTHON:
 
