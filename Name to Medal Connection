@@ -1,5 +1,34 @@
 POSTGRE SQL:
 
+WITH c1 AS
+(
+SELECT name, medal, COUNT(medal) AS cnt
+FROM (SELECT name, COALESCE(medal, 'none') AS medal FROM olympics_athletes_events) a
+GROUP BY 1, 2
+), 
+
+c2 AS
+(
+SELECT LENGTH(SPLIT_PART(name, ' ', 1)) AS name_length, medal, SUM(cnt) AS total
+FROM c1
+GROUP BY 1, 2
+ORDER BY 1, 2
+)
+
+SELECT name_length, 
+COALESCE(MAX(no_medals), 0) AS no_medals, 
+COALESCE(MAX(bronze_medals), 0) AS bronze_medals, 
+COALESCE(MAX(silver_medals), 0) AS silver_medals,
+COALESCE(MAX(gold_medals), 0) AS gold_medals
+FROM 
+(SELECT name_length, 
+CASE WHEN medal = 'none' THEN total END AS no_medals,
+CASE WHEN medal = 'Gold' THEN total END AS gold_medals, 
+CASE WHEN medal = 'Bronze' THEN total END AS bronze_medals, 
+CASE WHEN medal = 'Silver' THEN total END AS silver_medals
+FROM c2) a
+GROUP BY 1
+
 
 PYTHON:
 
