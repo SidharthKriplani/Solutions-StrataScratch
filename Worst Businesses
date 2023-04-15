@@ -1,5 +1,29 @@
 POSTGRE SQL:
 
+WITH c1 AS
+(
+SELECT EXTRACT(YEAR FROM inspection_date) AS year, business_name, violation_id
+FROM sf_restaurant_health_violations
+), 
+
+c2 AS
+(
+SELECT year, business_name, COUNT(violation_id) AS violation_count
+FROM c1 
+GROUP BY 1, 2
+), 
+
+c3 AS
+(
+SELECT year, business_name, violation_count, 
+DENSE_RANK() OVER(PARTITION BY year ORDER BY violation_count DESC) rankk
+FROM c2
+)
+
+SELECT year, business_name, violation_count
+FROM c3
+WHERE rankk = 1
+
 
 PYTHON:
 
