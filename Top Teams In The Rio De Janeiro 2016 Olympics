@@ -1,5 +1,35 @@
 POSTGRE SQL:
 
+WITH c1 AS
+(
+SELECT event, team, COUNT(medal) AS cnt
+FROM olympics_athletes_events
+WHERE year = 2016
+GROUP BY 1, 2
+), 
+
+c2 AS
+(
+SELECT event, team, cnt, DENSE_RANK() OVER(PARTITION BY event ORDER BY cnt DESC, team ASC) AS rankk
+FROM c1
+)
+
+SELECT 
+event, 
+COALESCE(MAX(gold_team), 'No Team'), 
+COALESCE(MAX(silver_team), 'No Team'), 
+COALESCE(MAX(bronze_team), 'No Team')
+FROM 
+(SELECT event, 
+CASE WHEN rankk = 1 THEN CONCAT(team, ' with ', cnt, ' medals') END AS gold_team, 
+CASE WHEN rankk = 2 THEN CONCAT(team, ' with ', cnt, ' medals') END AS silver_team, 
+CASE WHEN rankk = 3 THEN CONCAT(team, ' with ', cnt, ' medals') END AS bronze_team
+FROM c2
+WHERE cnt!=0
+ORDER BY 1
+) a
+GROUP BY 1
+
 
 PYTHON:
 
