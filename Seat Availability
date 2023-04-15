@@ -1,5 +1,19 @@
 POSTGRE SQL:
 
+WITH c1 AS
+(
+SELECT
+LAG(seat_number) OVER(ORDER BY seat_number) seat1, 
+seat_number seat2, 
+seat_number-LAG(seat_number) OVER(ORDER BY seat_number) seat_diff
+FROM theater_availability
+WHERE is_available = TRUE
+)
+
+SELECT seat1 available_seat1, seat2 available_seat2
+FROM c1
+WHERE seat_diff = 1
+
 
 PYTHON:
 
