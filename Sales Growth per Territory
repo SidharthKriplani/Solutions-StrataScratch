@@ -1,5 +1,36 @@
 POSTGRE SQL:
 
+with c1 as 
+(select b.territory_id, a.order_value, a.order_date,
+case 
+when extract(month from a.order_date) in (1, 2, 3) then 'Q1'
+when extract(month from a.order_date) in (4, 5, 6) then 'Q2'
+when extract(month from a.order_date) in (7, 8, 9) then 'Q3'
+when extract(month from a.order_date) in (10, 11, 12) then 'Q4'
+end as quarter
+from fct_customer_sales a
+JOIN map_customer_territory b
+on a.cust_id = b.cust_id), 
+
+c2 as 
+(select territory_id, quarter, sum(order_value) sales 
+from c1
+where quarter in ('Q3', 'Q4')
+group by 1, 2), 
+
+c3 as 
+(select territory_id, quarter, sales as q4sale, 
+lag(sales) over(partition by territory_id order by quarter asc) as q3sale,
+sales - lag(sales) over(partition by territory_id order by quarter asc) as change
+from c2
+order by 1 asc, 2 asc)
+
+select territory_id, 100.0*change/q3sale as sales_growth
+from c3
+where 100.0*change/q3sale is not null
+
+--above solution is not, not giving correct results 
+
 
 PYTHON:
 
