@@ -1,5 +1,20 @@
 POSTGRE SQL:
 
+SELECT DISTINCT name
+FROM olympics_athletes_events
+WHERE name IN 
+(SELECT name
+FROM olympics_athletes_events
+WHERE year = 1992 
+AND team = 'Norway'
+AND sport = 'Alpine Skiing')
+AND name NOT IN 
+(SELECT name
+FROM olympics_athletes_events
+WHERE year = 1994
+AND team = 'Norway'
+AND sport = 'Alpine Skiing')
+
 
 PYTHON:
 
