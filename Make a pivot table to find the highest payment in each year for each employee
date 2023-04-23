@@ -1,5 +1,30 @@
 POSTGRE SQL:
 
+WITH c1 AS 
+(
+SELECT employeename, year, totalpay
+FROM sf_public_salaries
+WHERE year IN (2011, 2012, 2013, 2014)
+)
+
+SELECT
+employeename, 
+MAX(pay_2011) pay_2011,
+MAX(pay_2012) pay_2012,
+MAX(pay_2013) pay_2013,
+MAX(pay_2014) pay_2014
+FROM  
+
+(SELECT
+employeename, 
+CASE WHEN year = 2011 THEN totalpay ELSE 0 END AS pay_2011,
+CASE WHEN year = 2012 THEN totalpay ELSE 0 END AS pay_2012,
+CASE WHEN year = 2013 THEN totalpay ELSE 0 END AS pay_2013,
+CASE WHEN year = 2014 THEN totalpay ELSE 0 END AS pay_2014
+FROM c1) a
+GROUP BY 1
+ORDER BY 1
+
 
 PYTHON:
 
