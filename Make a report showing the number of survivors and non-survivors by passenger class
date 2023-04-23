@@ -1,5 +1,21 @@
 POSTGRE SQL:
 
+WITH c1 AS
+(SELECT survived, pclass, COUNT(*) AS cnt
+FROM titanic
+GROUP BY 1, 2)
+
+SELECT survived, MAX(first_class), MAX(second_class), MAX(third_class)
+FROM 
+(
+SELECT survived, 
+CASE WHEN pclass = 1 THEN cnt END AS first_class, 
+CASE WHEN pclass = 2 THEN cnt END AS second_class,
+CASE WHEN pclass = 3 THEN cnt END AS third_class
+FROM c1
+) a 
+GROUP BY 1
+
 
 PYTHON:
 
