@@ -1,5 +1,22 @@
 POSTGRE SQL:
 
+WITH cte AS
+(SELECT
+alls.student_firstname first_name,
+ah.grade, 
+alls.student_id id,
+CASE WHEN ah.grade IS NULL THEN 0 ELSE 1 END  total_work
+
+FROM allstate_homework ah
+LEFT JOIN allstate_students alls
+ON ah.student_id=alls.student_id)
+
+SELECT first_name,
+AVG(grade),
+(100.0*SUM(total_work)/COUNT(total_work)) AS completion_percentage 
+FROM cte
+GROUP BY id, first_name;
+
 
 PYTHON:
 
