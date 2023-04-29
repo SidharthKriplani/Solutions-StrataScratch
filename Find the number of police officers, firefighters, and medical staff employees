@@ -1,5 +1,21 @@
 POSTGRE SQL:
 
+WITH cte 
+AS ( 
+SELECT CASE 
+WHEN jobtitle LIKE '%fire%' THEN 'Firefighter'
+WHEN jobtitle LIKE '%police%' THEN  'Police'
+WHEN jobtitle LIKE '%medical%' THEN 'Medical'
+ELSE NULL
+END AS job_category
+FROM sf_public_salaries 
+) 
+
+SELECT job_category, COUNT(job_category) AS n_employee
+FROM cte
+WHERE job_category IS NOT NULL
+GROUP BY job_category
+
 
 PYTHON:
 
