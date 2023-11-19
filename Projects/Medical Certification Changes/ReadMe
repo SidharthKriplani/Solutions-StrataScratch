@@ -1,0 +1,27 @@
+https://platform.stratascratch.com/data-projects/medical-certification-changes
+
+
+This data project has been used as a take-home assignment in the recruitment process for the data science positions at Match.
+
+Assignment
+Background
+
+Suppose that you have been hired as a consultant to assess the impact of two controversial changes that a physician specialty board implemented in 1990. Physicians are not required to obtain board certification for this specialty to practice medicine, but the majority of doctors in this specialty do take the exam upon completing their residency program. If a physician fails to pass the exam, they have the option of re-taking the exam the following year or any year after that. This specialty board maintains a performance monitoring program where Physicians are rated on a 100 point scale based on how closely their practice patterns align with a variety of published clinical guidelines that the board endorses. There is strong supporting evidence that this composite score is positively correlated with patient outcomes -- in other words, physicians who score highly according to this metric are likely to provide patients with better care than those who score poorly. This data is only available for certified physicians.
+
+In 1990, this specialty board made the decision to revamp their certification process in an attempt to increase the quality of care delivered by their physicians. Two primary changes were made:
+
+First, a human-administered test component was added to the initial certification exams, in which physicians seeking to obtain certification must pass an oral interview administered by certified board examiner. This was intended to make the certification exams more stringent.
+Second, a requirement was added that certified physicians must complete maintenance-of-certification exams every five years in order maintain their certification status. Previously, physicians who passed the initial exam received lifetime certification status. The goal of this change was to increase physicians' awareness of clinical best practices and the corresponding guideline-adherence scores in the attached data set.
+However, the changes were highly controversial among physicians, many of whom felt that the additional requirements would be too burdensome and would be no more effective at increasing quality of care than the previous certification process.
+
+Questions
+
+Prior to 1990, to what degree does it appear that physicians who passed their initial certification exams were more/less likely to follow clinical guidelines during their subsequent careers?
+How do the two changes that were made to the certification process in 1990 appear to have impacted physician behavior? Does the board appear to have succeeded in making the initial certification exams more stringent? Have the maintenance-of-certification exams increased guideline adherence? Were physicians' concerns about the changes justified? In responding, please note any instances where you think of multiple hypotheses that might explain a given observation.
+Data Description
+To answer this question, you have been given the attached spreadsheet, which contains data on every physician who received board certification for this specialty between 1970 and 2002. In the background tab of the spreadsheet, you will find the year that each physician completed his/her residency training and the year that s/he received initial board certification. In the adherence_evaluations tab you will find annual results of a performance monitoring program that this specialty board maintains.
+
+The attached data does not explicitly indicate whether a physician passed or failed their certification exam(s). However, prior analysis of the 1970-1990 data set has shown that all physicians who obtained certification the same year they completed residency passed their board exams on the first attempt. On the contrary, during the same time period, most physicians who obtained certification in subsequent years after completing residency did so because they failed the board exams the first year they took them.
+
+Practicalities
+Please work on the questions in the displayed order. Make sure that the solution reflects your entire thought process - it is more important how the code is structured rather than the final answers. You are expected to spend no more than 3 hours solving this project.
