@@ -1,0 +1,63 @@
+https://platform.stratascratch.com/data-projects/arbitrage-algorithm
+
+This data project has been used as a take-home assignment in the recruitment process for the data science positions at United Ideas.
+
+Assignment
+Based on the data provided from various sources, suggest the most effective arbitrage strategy. We assume that you start with an amount of $1000 on the first day mentioned in the files (April 27). Your goal is to have the highest possible amount at the end (May 28) of the data period.
+
+The method of solving this task is arbitrary, you can use absolutely anything.
+
+Key terms
+
+Arbitrage - buying in one place cheaper and selling in another, simultaneously; Learn more:
+https://en.wikipedia.org/wiki/Arbitrage
+https://money.howstuffworks.com/personal-finance/financial-planning/arbitrage.htm
+https://youtu.be/AuCH7fHZsZ4
+Bid - this is the price at which sell orders are opened and buy orders are closed;
+Ask - this is the price at which buy trades are opened and sell trades are closed;
+Spread - this is the difference between the bid price and the ask price;
+Long - when we buy something, expecting the price to rise;
+Short - when we sell something, expecting the price to fall;
+Short Selling - selling something we don't have - a type of stock market transaction that allows us to make money on a decline. In practice, it consists of the fact that we borrow and bet on a decline; Learn more: https://www.investopedia.com/terms/s/shortselling.asp
+Important info: This distinction is of great importance for the settlement of transactions. Note that when buying an instrument (opening a long position), the transaction will be concluded at the Ask (higher) price. The conclusion of a sell transaction is always at the Bid price. Closing a long position is done at the Bid price, while a short position is closed at the Ask price.
+
+Algorithm of arbitrage
+
+TL;DR: Arbitrage is about buying cheaper and selling more expensive
+
+Suppose we have such an initial state:
+$1000 at our disposal,
+0 kg of apples;
+To simplify the subject, we assume that we can do short selling of apples;
+At some point of observing the rates, we notice that:
+At Market 1: Apples have a sell (ask) rate of 
+1.39297 and a buy (bid) rate of 1.39279 (given rates per kilo of apples),
+At Market 2: Apples have a selling rate (ask) of 
+1.38297 and a buying rate(bid)of1.38279 (given rates per kilo of apples);
+It looks like we can buy at Market 2 cheaper and sell at Market 1 more expensive; for simplicity's sake we assume at this point that there is a certain rate difference at which we will open a transaction at all, let's call it X - a smaller "spread" than X doesn't interest us, and we won't consider it an opportunity worth stooping for at all;
+In this case, we open two transactions simultaneously:
+We open for the amount of $500 a buy (long) transaction on Market 2,
+We open for the amount of $500 a sell (short) transaction on Market 1;
+At this point, we have theoretically earned, but after opening both transactions:
+We have (virtual) apples on Market 2 - as much as we managed to buy for $500,
+We have (virtual) dollars at Market 1 - here we made a short sale, so we have to "sell" as many kilograms of apples as we bought at Market 2 for dollars;
+At this point, we are in the process of arbitrage, but we need to return to the initial state, that is, to have dollars again and not contracts for dollars and short contracts for apples;
+So we wait for the next opportunity until the rates swing again by some reasonable range (because a smaller one would not interest us at all), let's call it Y;
+We then close transactions on both markets, so we are back with dollars in hand and no apples;
+Let's assume that we made 
+100 dollars on this transaction (such were the differences), in which case we have 1100 in our account;
+We can wait for the next opportunities
+Data Description
+CSV files are attached to this task. They contain apple rates from 7 markets. Each file shows how the bid and ask rates change in time for a specific market.
+
+Practicalities
+Date ranges in files do not always coincide, some markets do not work continuously;
+You can optimize at least these parameters:
+Amount of capital used for buying/selling,
+Minimum spread for opening transactions,
+Minimum spread for closing transactions,
+Maximum time when we have an open transaction - when there is no opportunity for closing, and so we close positions to be able to open further transactions,
+Allocation of capital between markets - some pairs of them generate larger opportunities among themselves, some smaller,
+And of course others according to your creativity :-)
+Remember that 
+1000(or any other amount of capital you have) must be divided between the markets − you cant go to two markets at the same time with 1000 and make the same money buying and selling, with two markets you have to divide it by $500;
