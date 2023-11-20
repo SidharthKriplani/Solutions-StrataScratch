@@ -1,0 +1,24 @@
+https://platform.stratascratch.com/data-projects/black-friday-purchases
+
+This data project has been used as a take-home assignment in the recruitment process for the data science positions at Walmart.
+
+Assignment
+The Management team at Walmart Inc. wants to analyze the customer purchase behavior (specifically, purchase amount) against the customer’s gender and the various other factors to help the business make better decisions. They want to understand if the spending habits differ between male and female customers: Do women spend more on Black Friday than men?
+
+Data Description
+The company collected the transactional data of customers who purchased products from Walmart Stores during Black Friday. The dataset in walmart_data.csv has the following features:
+
+User_ID
+Product_ID
+Gender - sex of a customer
+Age - age in bins
+Occupation (masked)
+City_Category - category of the city [A, B, C]
+Stay_In_Current_City_Years: number of years a customer stays in their current city
+Marital_Status
+Product_Category (masked)
+Purchase - purchase amount
+Practicalities
+For simplicity, you may assume that 50% of Walmart`s customer base are Male and the other 50% are Female.
+
+Analyze the provided data and provide insights to the best of your abilities. Include the relevant tables/graphs/visualization to explain what you have learned about the market. Make sure that the solution reflects your entire thought process including the preparation of data - it is more important how the code is structured rather than just the final result or plot.
