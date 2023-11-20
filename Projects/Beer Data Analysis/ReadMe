@@ -1,0 +1,34 @@
+https://platform.stratascratch.com/data-projects/beer-data-analysis
+
+This data project has been used as a take-home assignment in the recruitment process for the data science positions at Evolent Health.
+
+Assignment
+In this assignment you will work with a beer data set. Please provide an answer to the questions below. Answer as many questions as possible:
+
+Rank the top 3 breweries which produce the strongest beers.
+Which year did beers enjoy the highest ratings?
+Based on the users' ratings, which factors are important among taste, aroma, appearance, and palette?
+If you were to recommend 3 beers to your friends based on this data, which ones would you recommend?
+Which beer style seems to be the favourite based on the reviews written by users? How does written reviews compare to overall review score for the beer style?
+Data Description
+The provided compressed file BeerDataScienceProject.tar.bz2 contains data about beers and their reviews. It has the following columns:
+
+beer_ABV - alcohol by volume
+beer_beerId - beer ID
+beer_brewerId - beer brewer ID
+beer_name - beer name
+beer_style - beer style
+review_appearance - review on the beer's appearance
+review_palette - review on the beer's palette (colours)
+review_overall - overall beer review
+review_taste - review on the beer's taste
+review_profileName - profile name of the reviewer
+review_aroma - review on the beer's aroma
+review_text - the full text of the review
+review_time - timestamp when the review was made
+Hint
+The provided .tar.bz2 file is a compressed CSV file. Its contents can be loaded to a Pandas DataFrame using the read_csv() method from the Pandas library as follows:
+
+df = pd.read_csv("BeerDataScienceProject.tar.bz2", compression="bz2")
+Practicalities
+You will need to provide a Jupyter Notebook that describes your approach as a result of this task. When you submit your answers, please also include the code you used to answer the questions with proper commenting and documentation. It should be clear how one can reproduce your results. Make sure that you include all plots you created to complete the project and explain your results.
