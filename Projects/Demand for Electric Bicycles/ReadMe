@@ -1,0 +1,38 @@
+https://platform.stratascratch.com/data-projects/demand-for-electric-bicycles
+
+This data project has been used as a take-home assignment in the recruitment process for the data science positions at Yulu.
+
+Yulu is India’s leading micro-mobility service provider, which offers unique vehicles for the daily commute. Starting off as a mission to eliminate traffic congestion in India, Yulu provides the safest commute solution through a user-friendly mobile app to enable shared, solo and sustainable commuting. Yulu zones are located at all the appropriate locations (including metro stations, bus stands, office spaces, residential areas, corporate offices, etc) to make those first and last miles smooth, affordable, and convenient.
+
+Assignment
+Yulu has recently suffered considerable dips in its revenues. They have contracted a consulting company to understand the factors on which the demand for these shared electric bicycles depends. Specifically, they want to understand the factors affecting the demand for these shared electric bicycles in the Indian market.
+
+The company wants to know:
+
+Which variables are significant in predicting the demand for shared electric bicycles in the Indian market?
+How well do those variables describe the electric bicycle demand.
+Data Description
+The file bike_sharing.csv contains the usage data aggregated by the hour with the following columns:
+
+datetime - beginning of an hour for which the data are aggregated;
+season
+1: spring,
+2: summer,
+3: fall,
+4: winter;
+holiday - whether a day is a holiday or not
+workingday - if a day is neither weekend nor holiday is 1, otherwise is 0.
+weather
+1: clear, few clouds, scattered clouds
+2: mist + cloudy, mist + scattered clouds, mist + few clouds, mist
+3: light snow, light rain + thunderstorm + scattered clouds, light rain + scattered clouds
+4: heavy rain + ice pallets + thunderstorm + mist, snow + fog
+temp - air temperature in degrees Celsius
+atemp - feeling temperature in degrees Celsius
+humidity - air humidity in percent
+windspeed - wind speed in km/h
+casual - number of bikes rented by casual users
+registered - number of bikes rented by registered users
+count - total number of rented bikes including both casual and registered users
+Practicalities
+Analyze the provided data and provide insights to the best of your abilities. Use statistical tests to support your claims. Include the relevant tables/graphs/visualization to explain what you have learned about the market. Make sure that the solution reflects your entire thought process including the preparation of data - it is more important how the code is structured rather than just the final result or plot.
