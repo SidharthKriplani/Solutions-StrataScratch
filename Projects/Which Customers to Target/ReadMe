@@ -1,0 +1,49 @@
+https://platform.stratascratch.com/data-projects/which-customers-target
+
+This data project has been used as a take-home assignment in the recruitment process for the data science positions at Starbucks.
+Assignment
+
+Background
+In the experiment simulated by the data, an advertising promotion was tested to see if it would bring more customers to purchase a specific product priced at $10. Since it costs the company $0.15 to send out each promotion, it would be best to limit that promotion only to those that are most receptive to the promotion.
+
+Task
+Analyze the results of the experiment and identify the effect of the Treatment on product purchase and Net Incremental Revenue;
+Build a model to select the best customers to target that maximizes the Incremental Response Rate and Net Incremental Revenue;
+Score the Test.csv using the model and select the best customers and share the customer ID’s as csv file;
+Explain briefly the approach used in a separate document and also share the code that can be executed to reproduce results.
+Data Description
+A randomized experiment was conducted and the results are in Training.csv:
+
+Treatment – Indicates if the customer was part of treatment or control
+Purchase – Indicates if the customer purchased the product
+ID – Customer ID
+V1 to V7 – features of the customer
+Cost of sending a Promotion: $0.15 Revenue from purchase of product: $10 (There is only one product)
+
+Practicalities
+Tips
+Incremental Response Rate (IRR)
+IRR depicts how many more customers purchased the product with the promotion, as compared to if they didn't receive the promotion. Mathematically, it's the ratio of the number of purchasers in the promotion group to the total number of customers in the purchasers group (treatment) minus the ratio of the number of purchasers in the non-promotional group to the total number of customers in the non-promotional group (control).
+
+IRR= purch(treat)/cust(treat) − cust(ctrl)/ctrl(treat)
+
+Net Incremental Revenue (NIR)
+NIR depicts how much is made (or lost) by sending out the promotion. Mathematically, this is 10 times the total number of purchasers that received the promotion minus 0.15 times the number of promotions sent out, minus 10 times the number of purchasers who were not given the promotion.
+
+NIR=(10×purch(treat)−0.15×cust(treat)​)−10×purch(ctrl)
+
+How To Test Your Strategy?
+When you feel like you have an optimization strategy, complete the promotion_strategy function to pass to the test_results function.
+From past data, we know there are four possible outomes:
+
+Table of actual promotion vs. predicted promotion customers:
+
+            Actual
+Predicted  Yes   No
+   Yes      I    II
+   No      III   IV
+The metrics are only being compared for the individuals we predict should obtain the promotion – that is, quadrants I and II. Since the first set of individuals that receive the promotion (in the training set) receive it randomly, we can expect that quadrants I and II will have approximately equivalent participants.
+
+Comparing quadrant I to II then gives an idea of how well your promotion strategy will work in the future.
+
+Get started by reading in the data below. See how each variable or combination of variables along with a promotion influences the chance of purchasing. When you feel like you have a strategy for who should receive a promotion, test your strategy against the test dataset used in the final test_results function.
