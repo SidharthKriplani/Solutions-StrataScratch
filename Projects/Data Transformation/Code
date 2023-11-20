@@ -1,0 +1,287 @@
+import json, pytz, json, pandas as pd, datetime as dt, collections
+# https://platform.stratascratch.com/data-projects/data-transformation
+
+with open(r'C:\Users\ASUS\Desktop\case.json', 'r') as f:
+  data = json.load(f)
+
+# FILES THAT WE NEED TO CREATE
+# CuratedOfferOptions.csv:
+# CurationProvider: in quotes
+# OfferId: in quotes
+# DealerId: in quotes
+# UniqueOptionId: in quotes
+# OptionId: in quotes
+# IsMobileDealer: without quotes
+# IsOpen: without quotes
+# Eta: in quotes
+# ChamaScore: without quotes
+# ProductBrand: in quotes
+# IsWinner: without quotes
+# MinimumPrice: without quotes
+# MaximumPrice: without quotes
+# DynamicPrice: without quotes
+# FinalPrice: without quotes
+# DefeatPrimaryReason: in quotes
+# DefeatReasons: in quotes
+# EnqueuedTimeSP: DD/MM/YYYY (converted to Brasilian timezone - UTC-3)
+
+# DynamicPriceOption.csv:
+# Provider: in quotes
+# OfferId: in quotes
+# UniqueOptionId: in quotes
+# BestPrice: without quotes
+# EnqueuedTimeSP: DD/MM/YYYY (converted to Brasilian timezone - UTC-3)
+
+# DynamicPriceRange.csv:
+# Provider: in quotes
+# OfferId: in quotes
+# MinGlobal: without quotes
+# MinRecommended: without quotes
+# MaxRecommended: without quotes
+# DifferenceMinRecommendMinTheory: without quotes
+# EnqueuedTimeSP: DD/MM/YYYY (converted to Brasilian timezone - UTC-3)
+
+
+# SEPARATING THE DATA ACCORDING TO THE THREE PROVIDED CATEGORIES
+
+dynamicpriceoption = []
+for item in data:
+    try:
+        payload = json.loads(item['Payload'])
+        if 'provider' in payload and payload['provider'].lower() == 'applydynamicpriceperoption':
+            dynamicpriceoption.append(item)
+    except json.JSONDecodeError:
+        # Handle cases where the payload is not valid JSON
+        pass
+    except KeyError:
+        # Handle cases where 'provider' key is not in the JSON object
+        pass
+    
+dynamicpricerange = []
+for item in data:
+    try:
+        payload = json.loads(item['Payload'])
+        if 'provider' in payload and payload['provider'].lower() == 'applydynamicpricerange':
+            dynamicpricerange.append(item)
+    except json.JSONDecodeError:
+        # Handle cases where the payload is not valid JSON
+        pass
+    except KeyError:
+        # Handle cases where 'provider' key is not in the JSON object
+        pass
+    
+curatedofferoptions = []
+for item in data:
+        if item.get('EventName', '').lower() == 'curateoffer_result':
+            curatedofferoptions.append(item)
+            
+len(curatedofferoptions), len(dynamicpricerange), len(dynamicpriceoption)
+
+
+# DYNAMIC PRICE RANGE
+# DynamicPriceRange.csv:
+
+format = '%Y-%m-%d %H:%M:%S'
+
+provider = [json.loads(dynamicpricerange[i]['Payload'])['provider'] for i in range(len(dynamicpricerange))] 
+offerid = [json.loads(dynamicpricerange[i]['Payload'])['offerId'] for i in range(len(dynamicpricerange))]
+minglobal = [json.loads(dynamicpricerange[i]['Payload'])['algorithmOutput']['min_global'] for i in range(len(dynamicpricerange))]
+maxrec = [json.loads(dynamicpricerange[i]['Payload'])['algorithmOutput']['max_recommended'] for i in range(len(dynamicpricerange))]
+minrec = [json.loads(dynamicpricerange[i]['Payload'])['algorithmOutput']['min_recommended'] for i in range(len(dynamicpricerange))]
+diff = [json.loads(dynamicpricerange[i]['Payload'])['algorithmOutput']['differenceMinRecommendMinTheory'] for i in range(len(dynamicpricerange))]
+time = [(dt.datetime.strptime(dynamicpricerange[i]['EnqueuedTimeUtc'].rsplit(' ', 1)[0], format) + dt.timedelta(hours = -3)).strftime(format).split(' ')[0] for i in range(len(dynamicpricerange))]
+
+dynamicpricerange = pd.DataFrame({'Provider': provider,
+'OfferId': offerid,
+'MinGlobal': minglobal,
+'MinRecommended': minrec,
+'MaxRecommended': maxrec,
+'DifferenceMinRecommendMinTheory': diff,
+'EnqueuedTimeSP': time})
+
+
+# DYNAMIC PRICE OPTION
+# DynamicPriceOption.csv:
+
+format = '%Y-%m-%d %H:%M:%S'
+
+provider = {i: json.loads(dynamicpriceoption[i]['Payload'])['provider'] for i in range(len(dynamicpriceoption))}
+offerid = {i: json.loads(dynamicpriceoption[i]['Payload'])['offerId'] for i in range(len(dynamicpriceoption))}
+time = {i: (dt.datetime.strptime(dynamicpriceoption[i]['EnqueuedTimeUtc'].rsplit(' ', 1)[0], format) + dt.timedelta(hours=-3)).strftime(format).split(' ')[0] for i in range(len(dynamicpriceoption))}
+
+dict_temp_option = {}
+dict_temp_price = {}
+
+def dict_create(data, option = ''):
+    k = 0
+    for i in range(len(data)):
+        k = json.loads(dynamicpriceoption[i]['Payload'])['algorithmOutput']
+        for j in range(len(k)):
+            dict_temp_option['uniqueoptionid'+str(i)+str(j)] = k[j]['uniqueOptionId']
+            dict_temp_price['bestprice'+str(i)+str(j)] = k[j]['bestPrice']
+            
+    if option == 'option':
+        return dict_temp_option
+    else:
+        return dict_temp_price
+
+uniqueoptionid = dict_create(dynamicpriceoption, 'option')
+bestprice = dict_create(dynamicpriceoption)
+
+# data = []
+# for key, value in bestprice.items():
+#     index = int(key[len('bestprice'):]) // 10  
+#     offer_id = offerid.get(index)
+#     if offer_id is not None:
+#         data.append({'OfferID': offer_id, 'BestPrice': value})
+        
+c_bestprice = collections.Counter([i[:-1] for i in list(bestprice.keys())])
+offeridlist = []
+for (value, count) in zip(offerid.values(), c_bestprice.values()):
+    for i in range(count):
+        offeridlist.append(value)
+        
+uniqueoptionidlist = list(uniqueoptionid.values())
+bestpricelist = list(bestprice.values())
+providerlist = [provider[0] for i in range(len(bestpricelist))]
+
+timelist = []
+for (value, count) in zip(time.values(), c_bestprice.values()):
+    for i in range(count):
+        timelist.append(value)
+        
+dynamicpriceoption = pd.DataFrame({'Provider': providerlist,
+'OfferId': offeridlist,
+'UniqueOptionId': uniqueoptionidlist,
+'BestPrice': bestpricelist,
+'EnqueuedTimeSP': timelist})
+
+
+# CURATED OFFER OPTIONS
+# CuratedOfferOptions.csv:
+
+# curationproviderlist = [json.loads(i['Payload'])[0]['curationProvider'] for i in curatedofferoptions]
+# offeridlist = [json.loads(i['Payload'])[0]['offerId'] for i in curatedofferoptions]
+# dealeridlist = [json.loads(i['Payload'])[0]['dealerId'] for i in curatedofferoptions]
+
+# timelist = []
+# for k in range(len(curatedofferoptions)):
+#     timelist.append(curatedofferoptions[k]['EnqueuedTimeUtc'])
+
+# timelist = {i: (dt.datetime.strptime(timelist[i].rsplit(' ', 1)[0], format) + dt.timedelta(hours=-3)).strftime(format).split(' ')[0] for i in range(len(timelist))}
+# timelist
+
+
+def parse_datetime(datetime_str):
+    formats = ['%Y-%m-%d %H:%M:%S %Z', '%Y-%m-%d %H:%M:%S', '%Y-%m-%d']
+    for fmt in formats:
+        try:
+            return dt.datetime.strptime(datetime_str, fmt)
+        except ValueError:
+            continue
+    raise ValueError(f"Date format not recognized: {datetime_str}")
+
+# Initialize lists
+curationproviderlist = []
+offeridlist = []
+dealeridlist = []
+timelist = []
+
+# Loop through each item in curatedofferoptions
+for item in curatedofferoptions:
+    payload_data = json.loads(item['Payload'])[0]
+    curationproviderlist.append(payload_data.get('curationProvider'))
+    offeridlist.append(payload_data.get('offerId'))
+    dealeridlist.append(payload_data.get('dealerId'))
+
+    # Processing the time with the new function
+    enqueued_datetime = parse_datetime(item['EnqueuedTimeUtc'])
+    adjusted_datetime = (enqueued_datetime + dt.timedelta(hours=-3)).strftime('%Y-%m-%d %H:%M:%S')
+    timelist.append(adjusted_datetime)
+
+# Convert timelist to dictionary with index keys
+timelist = {i: time for i, time in enumerate(timelist)}
+
+
+# defeatprimaryreasonlist = {}
+# for k in range(len(curatedofferoptions)):
+#     for i in json.loads(curatedofferoptions[k]['Payload']):
+#         for j in i['options']:
+#             if 'defeatPrimaryReason' in j:
+#                 defeatprimaryreasonlist[k] = j['defeatPrimaryReason']
+#             else:
+#                 pass
+
+
+uniqueoptionidlist = {}
+optionidlist = {}
+ismobiledealerlist = {}
+isopenlist = {}
+etalist = {}
+chamascorelist = {}
+productbrandlist = {}
+iswinnerlist = {}
+minimumpricelist = {}
+maximumpricelist = {}
+dynamicpricelist = {}
+finalpricelist = {}
+defeatreasonslist = {}
+defeatprimaryreasonlist = {}
+
+for k in range(len(curatedofferoptions)):
+    payload = json.loads(curatedofferoptions[k]['Payload'])
+    for i, item in enumerate(payload):
+        options = item['options']
+        for j, option in enumerate(options):
+            key = (k, i, j)  # Unique key for each option
+
+            # Assign values to respective dictionaries
+            uniqueoptionidlist[key] = option['uniqueOptionId']
+            optionidlist[key] = option['optionId']
+            ismobiledealerlist[key] = option.get('isMobileDealer')
+            isopenlist[key] = option.get('isOpen')
+            etalist[key] = option.get('eta')
+            chamascorelist[key] = option.get('chamaScore')
+            productbrandlist[key] = option.get('productBrand')
+            iswinnerlist[key] = option.get('isWinner')
+            minimumpricelist[key] = option.get('minimumPrice')
+            maximumpricelist[key] = option.get('maximumPrice')
+            dynamicpricelist[key] = option.get('dynamicPrice')
+            finalpricelist[key] = option.get('finalPrice')
+            defeatreasonslist[key] = option.get('defeatReasons')
+            defeatprimaryreasonlist[key] = option.get('defeatPrimaryReason')
+
+
+repeat_factor = len(uniqueoptionidlist) // len(curationproviderlist)
+
+expanded_curationproviderlist = [item for item in curationproviderlist for _ in range(repeat_factor)]
+expanded_offeridlist = [item for item in offeridlist for _ in range(repeat_factor)]
+expanded_dealeridlist = [item for item in dealeridlist for _ in range(repeat_factor)]
+expanded_timelist = [item for item in timelist.values() for _ in range(repeat_factor)]
+
+
+CuratedOfferOptions = pd.DataFrame({ 
+ 'CurationProvider': expanded_curationproviderlist,
+ 'OfferId': expanded_offeridlist,
+ 'DealerId': expanded_dealeridlist,
+ 'UniqueOptionId': list(uniqueoptionidlist.values()),
+ 'OptionId': list(optionidlist.values()),
+ 'IsMobileDealer': list(ismobiledealerlist.values()),
+ 'IsOpen': list(isopenlist.values()),
+ 'Eta': list(etalist.values()),
+ 'ChamaScore': list(chamascorelist.values()),
+ 'ProductBrand': list(productbrandlist.values()),
+ 'IsWinner': list(iswinnerlist.values()),
+ 'MinimumPrice': list(minimumpricelist.values()),
+ 'MaximumPrice': list(maximumpricelist.values()),
+ 'DynamicPrice': list(dynamicpricelist.values()),
+ 'FinalPrice': list(finalpricelist.values()),
+ 'DefeatPrimaryReason': list(defeatprimaryreasonlist.values()),
+ 'DefeatReasons': list(defeatreasonslist.values()),
+ 'EnqueuedTimeSP': expanded_timelist})
+
+
+# FINAL FILES
+dynamicpricerange
+dynamicpriceoption
+curatedofferoptions
