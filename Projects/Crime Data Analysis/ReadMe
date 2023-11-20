@@ -1,0 +1,44 @@
+https://platform.stratascratch.com/data-projects/crime-data-analysis
+
+This data project has been used as a take-home assignment in the recruitment process for the data science positions at the City of Montreal.
+
+Assignment
+Analyze the data and draw conclusions on the distribution and nature of crime in Montreal City. In your analysis, include maps that visualize the location of different incidents globally and in relation to police districts. Your analysis may also provide answers to the following questions:
+
+What are the top 3 prevalent crimes or offenses committed in Montreal City?
+What part of the day did most crime incidents occur?
+Which top 5 police precincts (PDQ) got the most crime complaints?
+Which are the top 3 PDQs that got the least crime complaints?
+Which neighborhoods recorded the highest crime incidents and what are the crime types in these neighborhoods?
+Which neighborhood has the most cases of murder?
+You may consider all provided data or a selected timeframe. You are also free to explore the data further and extract additional insights other than the questions above.
+
+Data Description
+The file actes-criminels.csv contains the list of criminal acts recorded by the Service de police de la Ville de Montréal (SPVM). Description of columns and translation of values:
+
+CATEGORIE (list of values) : Nature of the event:
+Introduction (eng. breaking and entering): breaking and entering a public establishment or private residence, theft of a firearm from a residence;
+Vol dans / sur véhicule à moteur (eng. theft from/to a motor vehicle): theft of the contents of a motor vehicle (car, truck, motorbike, etc.) or of a vehicle part (wheel, bumper, etc.)
+Vol de véhicule à moteur (eng. theft of a motor vehicle): theft of a car, truck, motorbike, snowmobile with or without a trailer, construction or farm vehicle, all-terrain vehicle
+Méfait (eng. mischief): graffiti and damage to religious property, vehicle or general damage and all other types of mischief
+Vol qualifié (eng. robbery) : robbery with the violence of business, financial institution, person, purse, armored car, vehicle, firearm, and all other types of robbery
+Infraction entraînant la mort (eng. murder resulting in death): first-degree murder, second-degree murder, manslaughter, infanticide, criminal negligence, and all other types of offenses resulting in death;
+DATE (date) : Date the event was reported to the SPVM in YYYY-MM-DD format;
+QUART (list of values): Time of day the event was reported to the SPVM:
+jour (eng. day): Between 8:01 a.m. and 4:00 p.m.
+soir (eng. evening) : Between 4:01 pm and midnight
+nuit (eng. night) : Between 00:01 and 8:00 a.m.;
+PDQ (numeric) : Number of the police precinct covering the territory where the event took place;
+X (spatial coordinates): Geospatial position in MTM8 projection (SRID 2950);
+Y (spatial coordinates): Geospatial position in MTM8 projection (SRID 2950);
+LATITUDE (spatial coordinates): geographical position of the event after obfuscation to an intersection according to the WGS84 geodetic reference frame;
+LONGITUDE (spatial coordinates): geographical position of the event after obfuscation at an intersection according to the WGS84 geodetic reference frame;
+The file limitespdq.geojson contains the area covered by each SPVM (police) precinct. Description of columns:
+
+PDQ (numeric): precinct number (corresponds to the field PDQ in the first dataset);
+Nom_PDQ (text): Name of the precinct;
+WKT (text): Geometry in "well-known text" format of the multiple polygon corresponding to the territory of the precinct;
+For some analysis, you may want to extract the name of the neighborhood or an address from the geographic coordinates. To do this, you are encouraged to use a geocoding API such as Nomatim.
+
+Practicalities
+Analyze the provided data and answer the questions to the best of your abilities. Include the relevant tables/graphs/visualization to explain and support your findings. Make sure that the solution reflects your entire thought process including the preparation of data - it is more important how the code is structured rather than just the final result or plot. You are expected to spend no more than 3-6 hours on this project.
