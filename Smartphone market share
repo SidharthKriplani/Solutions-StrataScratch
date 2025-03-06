@@ -1,0 +1,7 @@
+Python (Visualization)
+
+plt.figure(figsize = (8, 8))
+colors=['turquoise', 'tomato', 'orchid']
+plt.pie(df['market_share'], labels = df['brand'], colors=colors)
+plt.title('Market Share of Smartphone Brands')
+plt.show()
