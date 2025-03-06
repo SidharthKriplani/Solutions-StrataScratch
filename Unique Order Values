@@ -1,0 +1,10 @@
+PYTHON (Algorithms):
+
+def non_duplicate(input):
+    li = []
+    for i in range(len(input)):
+        if input[i] not in li:
+            li.append(input[i])
+        else:
+            pass
+    return li 
