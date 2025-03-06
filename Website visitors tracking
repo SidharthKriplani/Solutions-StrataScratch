@@ -1,0 +1,9 @@
+Python (Visualization)
+
+plt.figure(figsize=(14, 7))
+plt.plot(df['date'], df['visitors'], color='midnightblue')
+plt.title('Daily Number of Visitors Over the Last Year')
+plt.xlabel('Date')
+plt.ylabel('Number of Visitors')
+plt.grid(True)
+plt.show()
